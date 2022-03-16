@@ -1,0 +1,42 @@
+<?php
+/**Bloque de funciones para la base de datos  */
+/**Funcion Leer_config*/ 
+function leer_config($ficheroXML,$eschema){
+
+    $config=new DOMDocument();
+    $config->load($ficheroXML);
+    $res=$config->schemaValidate($eschema);
+    if($res=FALSE){
+        throw new InvalidArgumentException("Revise ficheros de configuración.");
+    }
+    
+    $datos=simplexml_load_file($ficheroXML);
+    $ip=$datos->xpath("//ip");
+    $nombre=$datos->xpath("//nombre");
+    $usuario=$datos->xpath("//usuario");
+    $clave=$datos->xpath("//clave");
+    $cad=sprintf("mysql:dbname=%s;host=%s",$nombre[0],$ip[0]);
+    $result=[];
+    $result[]=$cad;
+    $result[]=$usuario[0];
+    $result[]=$clave[0];
+    return $result;
+    
+    }
+/**Función comprobar usuario */
+function comprobar_usuario($nick,$clave){
+
+$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+$ins = "SELECT * FROM usuarios WHERE NICK ='".$nick."' and CLAVE = '".$clave."'";
+
+$result= $db->query($ins);
+if($result->rowCount()===1){
+return $result->fetch();
+
+}else{
+    
+    return FALSE;
+}
+
+}
