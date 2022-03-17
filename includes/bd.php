@@ -23,12 +23,13 @@ function leer_config($ficheroXML,$eschema){
     return $result;
     
     }
+
 /**Función comprobar usuario */
-function comprobar_usuario($nick,$clave){
+function comprobar_usuario($nombre_usuario,$clave){
 
 $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
 $db=new PDO($res[0],$res[1],$res[2]);
-$ins = "SELECT * FROM usuarios WHERE NICK ='".$nick."' and CLAVE = '".$clave."'";
+$ins = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
 
 $result= $db->query($ins);
 if($result->rowCount()===1){
