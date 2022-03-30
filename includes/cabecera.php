@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <title>Title</title>
@@ -27,7 +27,7 @@
       <!--Fin  Cabecera-->
 
       <!--Barra de navegación-->
-      <nav class="nav justify-content-center  bg-dark" style="display: ">
+      <nav class="nav justify-content-center  bg-dark" >
         <li class="nav-item">
           <a class="btn btn-primary" href="index.php">Inicio</a>
         </li>

@@ -1,0 +1,197 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Home</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.0.2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <body>
+    <div class="container-fluid">
+      <!--Cabecera-->
+      <!doctype html>
+<html lang="es">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.0.2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <body>
+    <div class="container-fluid">
+      <!--Cabecera-->
+      <header id="header">
+        <div class="row">
+          <div class="col-6 col-lg-3 text-center border rounded">Inventario</div>
+          <div id="fecha" class="col-6 col-lg-9 text-end border rounded">
+          </div>
+        </div>
+
+      </header>
+      <!--Fin  Cabecera-->
+
+      <div id="navegacion" style="display: none;">
+        <!--Barra de navegación-->
+      <nav class="nav justify-content-center  bg-dark" >
+        <li class="nav-item">
+          <a class="btn btn-primary" href="index.html">Inicio</a>
+        </li>
+        
+       
+        <!--menú gestión de ventas-->
+        <li class="nav-item">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión de ventas
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+              <li><a id="nuevaVenta" class="dropdown-item" href="#">Nueva venta</a></li>
+              <li><a class="dropdown-item" href="#">Eliminar venta</a></li>
+            </ul>
+          </div>
+        </li>
+        <!--Fin menú gestión de ventas-->
+        <!--menú informe de ventas-->
+        <li class="nav-item">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Informe de ventas
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#">última venta</a></li>
+              <li><a class="dropdown-item" href="#">ventas del día</a></li>
+              <li><a class="dropdown-item" href="#">ventas del periodo</a></li>
+            </ul>
+          </div>
+        </li>
+        <!--Fin menú informe de ventas-->
+        <!--opciones del administrador-->
+<div id="admin" style="display:none">
+  <!--menú gestión de usuarios-->
+<nav class="nav justify-content-center  bg-danger" >
+        <li class="nav-item" >
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión de usuarios
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#">Alta nuevo usuario</a></li>
+              <li><a class="dropdown-item" href="#">Baja usuario</a></li>
+              <li><a class="dropdown-item" href="#"></a></li>
+            </ul>
+          </div>
+        </li>
+        <!--Fin menú gestión de usuarios-->
+        <!--menú gestión de productos-->
+        <li class="nav-item" >
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Gestión de Productos
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="#">Alta nuevo producto</a></li>
+              <li><a class="dropdown-item" href="#">Baja producto</a></li>
+              <li><a class="dropdown-item" href="#">Comprar producto</a></li>
+            </ul>
+          </div>
+        </li>
+        <!--Fin menú gestión de productos-->
+        </nav>
+        
+        
+        
+</div>
+        <!--fin opciones del administrador-->
+      </nav>
+      </div>
+      <!--Fin barra de navegación-->
+        
+
+      </header>
+      <!--Fin  Cabecera-->
+
+
+      <!--Contenido-->
+      <div class="col-md-12">
+        <div class="panel">
+          <div class="jumbotron text-center" id="contenido">
+            <!---------------Formulario login---------------------->
+            <div id="login">
+              <h1>Acceso Usuarios</h1>
+              <form method="post" onsubmit="return login()" class="clearfix">
+                <div class="form-group">
+                  <label for="usuario" class="control-label">Usuario</label>
+                  <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="Antonio">
+                </div>
+                <div class="form-group">
+                  <label for="clave" class="control-label">Contraseña</label>
+                  <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña" value="antonio">
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-info  pull-right">Acceso</button>
+                </div>
+              </form>
+            </div>
+            <!--Fin formulario login-->
+            <!--nueva venta-->
+            <div id="formularioVenta" style="display: none;">
+                <h1>Nueva Venta</h1>
+                <form id="formularioVenta">
+                 <div class="form-goup">
+                    <label for="producto">Producto:</label>
+                  <input type="text" placeholder="Producto" name="producto">
+                 </div>
+                 <div class="form-goup">
+                  <label for="cantidad">Cantidad:</label>
+                  <input type="number" name="cantidad" id="cantidad" placeholder="cantidad">
+                  
+                 </div>
+                  
+                </form>
+                <div class="row">
+                  <div class="col" id="busqueda"></div>
+                </div>
+            </div>
+            <!--Fin nueva venta-->
+            <!--eliminar Venta-->
+            <!--Fin eliminar Venta-->
+            
+          </div>
+        </div>
+      </div>
+      <!--Fin Contenido-->
+      <!--Pié de página-->
+      <footer>
+        <div class="text-center p-5 bg-light">
+          © 2021 Copyright: Antonio Moya Calvo
+        </div>
+      </footer>
+    </div>
+    <!--JavaScript-->
+   
+    <script src="./js/sesiones.js"></script>
+    <script src="./js/cargarDatos.js"></script>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+  </body>
+
+</html>

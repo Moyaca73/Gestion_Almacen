@@ -29,11 +29,27 @@ function comprobar_usuario($nombre_usuario,$clave){
 
 $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
 $db=new PDO($res[0],$res[1],$res[2]);
-$ins = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
+$select = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
 
-$result= $db->query($ins);
+$result= $db->query($select);
 if($result->rowCount()===1){
 return $result->fetch();
+
+}else{
+    
+    return FALSE;
+}
+
+}
+/**función cargar_usuario(nombre_usuario,clave) */
+function cargar_usuario($nombre_usuario,$clave){
+    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+$select = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
+
+$result= $db->query($select);
+if($result->rowCount()===1){
+return $result;
 
 }else{
     
