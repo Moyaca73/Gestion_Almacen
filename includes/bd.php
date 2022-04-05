@@ -57,3 +57,18 @@ return $result;
 }
 
 }
+/**Función cargarProductos() */
+function cargarProductos(){
+    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+$select = "SELECT p.id, p.nombre, p.precio_venta, p.stock, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
+
+$result= $db->query($select);
+if($result->rowCount()>=1){
+return $result;
+
+}else{
+    
+    return FALSE;
+}
+}

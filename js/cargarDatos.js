@@ -1,4 +1,16 @@
+/***************Aplicación*********** */
+//*gestión de ventas*/
+//nueva venta
+$(document).on('click', '#nuevaVenta', function(e){
+    document.getElementById('formularioVenta').style.display="block";
+    mostarProductos();
+})
+
+//buscar productos 
+/*****************Fin Aplicación********* */
+
 /**Funciones para solicitar datos al sevidor */
+
 /**Función fecha */
 
 console.log(fecha());
@@ -52,19 +64,75 @@ function cargarUsuario(){
         }
     }
     //petición al servidor
-    xhttp.open("GET","usuario.php",true);
+    xhttp.open("GET","../backend/usuario.php",true);
     xhttp.send();
     return false;
     
 }
 
-//*gestión de ventas*/
-//nueva venta
-$(document).on('click', '#nuevaVenta', function(e){
-    document.getElementById('formularioVenta').style.display="block";
-})
+/**Función mostarProductos() */
+function mostarProductos(){
+    $.ajax({
+        type: "Get",
+        url: "../backend/productos.php",
+        data: "data",
+       //cuando recibe la respuesta
+        success: function (response) {
+            
+            let productos = JSON.parse(response);
+            console.log(productos);
+            let tabla ='';
+            productos.forEach(producto => {
+                let id = producto.id;
+                tabla += `
+                    <tr>
+                    <td>${producto.id}</td>
+                    <td>${producto.nombre}</td>
+                    <td>${producto.stock}</td>
+                    <td>${producto.precio_venta}</td>
+                    <td>${producto.nombre_categoria}</td>
+                    <td>
+                        <div class="input-group">
+                        <label>CANTIDAD  </label>
+                        <input id="cantidad${id}" type="number" name="cantidad"
+                        class="form-control" min="0" placeholder="cantidad" >
+                        <span class="input-group-btn">
+                            <input  class="btn btn-success btn_venta" type="button " value="Venta" productoId="${id}">
+                         </span>
+                        </div>
+                    </td>
+                `
+                 $('#busqueda').html(tabla);
+               
+            });
+            $(document).on('click','.btn_venta', function(){
+                let id = $(this).attr('productoId');
+                let cantidad = $('#cantidad'+id).val();
+                console.log(id);
+                console.log(cantidad);
+                procesarVenta(id,cantidad);
+                
+            })
+           
+           
+            
 
-//buscar productos 
+            
+        }
+    });
+}
+/**Funcion procesarVenta() */
+function procesarVenta(producto,unidades){
+    console.log(producto);
+    console.log(unidades);
+    
+
+    
+    
+    
+
+}
+
    
 
 

@@ -23,7 +23,7 @@ function login(formu){
     let clave = document.getElementById("clave").value;
     let params = "usuario=" + usuario + "&clave=" +clave;
     
-    xhttp.open("POST","login.php",true);
+    xhttp.open("POST","../backend/login.php",true);
     //cabecera y cadena de parámetros
     xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xhttp.send(params);

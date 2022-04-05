@@ -1,5 +1,5 @@
 <?php
-include ('./includes/bd.php');
+include ('../includes/bd.php');
 session_start();
  $nombre_usuario = $_SESSION['usuario']['nombre_usuario'];
  $clave = $_SESSION['usuario']['clave'];

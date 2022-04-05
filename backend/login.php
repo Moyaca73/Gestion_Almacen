@@ -1,5 +1,5 @@
 <?php
-    require_once("./includes/bd.php");
+    require_once("../includes/bd.php");
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $usu = comprobar_usuario($_POST["usuario"], $_POST["clave"]);
   
