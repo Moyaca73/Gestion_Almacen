@@ -2,7 +2,8 @@
 //*gestión de ventas*/
 //nueva venta
 $(document).on('click', '#nuevaVenta', function(e){
-    document.getElementById('formularioVenta').style.display="block";
+    document.getElementById('ultimaVenta').style.display="none";
+    document.getElementById('venta').style.display="block";
     mostarProductos();
 })
 
@@ -93,6 +94,8 @@ function mostarProductos(){
                     <td>${producto.nombre_categoria}</td>
                     <td>
                         <div class="input-group">
+                        <input type="hidden" id="precio_venta${id}" value="${producto.precio_venta}">
+                        <input type="hidden" id="stock${id}" value="${producto.stock}">
                         <label>CANTIDAD  </label>
                         <input id="cantidad${id}" type="number" name="cantidad"
                         class="form-control" min="0" placeholder="cantidad" >
@@ -102,29 +105,52 @@ function mostarProductos(){
                         </div>
                     </td>
                 `
-                 $('#busqueda').html(tabla);
+                 $('#tablaVenta').html(tabla);
                
             });
             $(document).on('click','.btn_venta', function(){
                 let id = $(this).attr('productoId');
-                let cantidad = $('#cantidad'+id).val();
-                console.log(id);
-                console.log(cantidad);
-                procesarVenta(id,cantidad);
+                let cantidad = parseInt($('#cantidad'+id).val());
+                let precio_venta = $('#precio_venta'+id).val();
+                let stock = parseInt($('#stock'+id).val());
+                console.log(`cantidad:${cantidad}`);
+                console.log(precio_venta);
+                console.log(stock);
+                if(stock < cantidad){
+                    alert(`Solo dispones del ${stock} unidades`);
+                    
+                }else if(cantidad == 0){
+                    alert('Debes introducir una cantidad mayor que cero');
+                }else{
+                     procesarVenta(id,cantidad,precio_venta);
+                    }
+                
                 
             })
            
-           
-            
-
-            
+      
         }
     });
 }
-/**Funcion procesarVenta() */
-function procesarVenta(producto,unidades){
-    console.log(producto);
-    console.log(unidades);
+/**Funcion procesarVenta(producto,unidades,precio_venta) */
+function procesarVenta(producto,unidades,precio_venta){
+    
+    $.ajax({
+        type: "POST",
+        url: "../backend/venta.php",
+        data: {producto,unidades,precio_venta},
+        success: function (response) {
+            console.log(unidades);
+            console.log(response);
+
+            document.getElementById('venta').style.display="none";
+            document.getElementById('ultimaVenta').style.display="block";
+            document.getElementById('ventaCorrecta').style.display="block";
+
+            
+           
+        }
+    });
     
 
     

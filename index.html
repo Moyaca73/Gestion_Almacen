@@ -152,7 +152,7 @@
             </div>
             <!--Fin formulario login-->
             <!--nueva venta-->
-            <div id="formularioVenta" style="display: none;">
+            <div id="venta" style="display: none;">
                 <h1>Nueva Venta</h1>
                 <form id="formularioVenta">
                  <div class="form-goup">
@@ -160,7 +160,7 @@
                   <input type="text" placeholder="Producto" name="productoBuscar" id="productoBuscar">
                  </div>
                  <div id="lista_productos" class="table-responsive table-bordered">
-                  
+              
                   
                  </div>
                   
@@ -176,13 +176,32 @@
                         <th>CATEGORIA</th>
                         <th>NUEVA VENTA</th>
                       </tr>
-                      <tbody id="busqueda">
+                      <tbody id="tablaVenta">
                         
                       </tbody>
                     </table>
                   </div>
                 </div>
             </div>
+           
+            <div id="ultimaVenta" class="row" style="display: none;">
+              <h1 id="ventaCorrecta" >La venta ha sido procesada correctamente</h1>
+              <div class="col" >
+                <table class="table table-dark">
+                  <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO</th>
+                    <th>TOTAL</th>
+                    <th>ELIMINAR VENTA</th>
+                  </tr>
+                  <tbody id="tablaUltimaVenta">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!--última Venta-->
             <!--Fin nueva venta-->
             <!--eliminar Venta-->
             <!--Fin eliminar Venta-->
