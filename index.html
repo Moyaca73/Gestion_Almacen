@@ -52,7 +52,7 @@
         <!--Barra de navegación-->
       <nav class="nav justify-content-center  bg-dark" >
         <li class="nav-item">
-          <a class="btn btn-primary" href="index.html">Inicio</a>
+          <a class="btn btn-primary" href="./includes/cerrarSesion.php">Inicio</a>
         </li>
         
        
@@ -64,7 +64,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
               <li><a id="nuevaVenta" class="dropdown-item" href="#">Nueva venta</a></li>
-              <li><a class="dropdown-item" href="#">Eliminar venta</a></li>
+              <li><a id="eliminarVenta" class="dropdown-item" href="#">Eliminar venta</a></li>
             </ul>
           </div>
         </li>
@@ -143,7 +143,7 @@
                 </div>
                 <div class="form-group">
                   <label for="clave" class="control-label">Contraseña</label>
-                  <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña" value="antonio">
+                  <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña" value="antonio" required>
                 </div>
                 <div class="form-group">
                   <button type="submit" class="btn btn-info  pull-right">Acceso</button>
@@ -184,7 +184,7 @@
                 </div>
             </div>
            
-            <div id="ultimaVenta" class="row" style="display: none;">
+            <div id="ventas" class="row" style="display: none;">
               <h1 id="ventaCorrecta" >La venta ha sido procesada correctamente</h1>
               <div class="col" >
                 <table class="table table-dark">
@@ -196,7 +196,7 @@
                     <th>TOTAL</th>
                     <th>ELIMINAR VENTA</th>
                   </tr>
-                  <tbody id="tablaUltimaVenta">
+                  <tbody id="tablaVentas">
                   </tbody>
                 </table>
               </div>
@@ -204,6 +204,10 @@
             <!--última Venta-->
             <!--Fin nueva venta-->
             <!--eliminar Venta-->
+            <div id="eliminarVenta" style="display: none;">
+              <h1 id="ventaEliminada" style="display: none;">Venta eliminada con éxito</h1>
+
+            </div>
             <!--Fin eliminar Venta-->
             
           </div>

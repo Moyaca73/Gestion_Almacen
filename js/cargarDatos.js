@@ -4,7 +4,15 @@
 $(document).on('click', '#nuevaVenta', function(e){
     document.getElementById('ultimaVenta').style.display="none";
     document.getElementById('venta').style.display="block";
+    document.getElementById('ventaEliminada').style.display="none";
     mostarProductos();
+})
+//eliminar venta
+$(document).on('click', '#nuevaVenta', function(e){
+    document.getElementById('ultimaVenta').style.display="none";
+    document.getElementById('venta').style.display="none";
+    document.getElementById('ventaEliminada').style.display="none";
+    mostarVentas();
 })
 
 //buscar productos 
@@ -81,7 +89,6 @@ function mostarProductos(){
         success: function (response) {
             
             let productos = JSON.parse(response);
-            console.log(productos);
             let tabla ='';
             productos.forEach(producto => {
                 let id = producto.id;
@@ -98,8 +105,8 @@ function mostarProductos(){
                         <input type="hidden" id="stock${id}" value="${producto.stock}">
                         <label>CANTIDAD  </label>
                         <input id="cantidad${id}" type="number" name="cantidad"
-                        class="form-control" min="0" placeholder="cantidad" >
-                        <span class="input-group-btn">
+                        class="form-control" min="0" value="0" required >
+                        <span class="input-group-btn ">
                             <input  class="btn btn-success btn_venta" type="button " value="Venta" productoId="${id}">
                          </span>
                         </div>
@@ -108,7 +115,9 @@ function mostarProductos(){
                  $('#tablaVenta').html(tabla);
                
             });
-            $(document).on('click','.btn_venta', function(){
+            $(document).on('click','.btn_venta', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
                 let id = $(this).attr('productoId');
                 let cantidad = parseInt($('#cantidad'+id).val());
                 let precio_venta = $('#precio_venta'+id).val();
@@ -132,6 +141,8 @@ function mostarProductos(){
         }
     });
 }
+/**Fin mostarProductos() */
+
 /**Funcion procesarVenta(producto,unidades,precio_venta) */
 function procesarVenta(producto,unidades,precio_venta){
     
@@ -140,25 +151,79 @@ function procesarVenta(producto,unidades,precio_venta){
         url: "../backend/venta.php",
         data: {producto,unidades,precio_venta},
         success: function (response) {
-            console.log(unidades);
             console.log(response);
-
             document.getElementById('venta').style.display="none";
-            document.getElementById('ultimaVenta').style.display="block";
+            document.getElementById('ventas').style.display="block";
             document.getElementById('ventaCorrecta').style.display="block";
+            let venta = JSON.parse(response);
+            let tabla ='';
+            venta.forEach(producto => {
+                let idVenta = producto.idVenta;
+                let total =parseInt(producto.cantidad) * parseFloat(producto.precio);
+                tabla += `
+                    <tr>
+                    <td>${producto.idVenta}</td>
+                    <td>${producto.nombre}</td>
+                    <td>${producto.cantidad}</td>
+                    <td>${producto.precio}</td>
+                    <td>${total}</td>
+                    <td>
+                        <div class="input-group ">
+                        <input type="hidden" id="cantidad${idVenta}" value="${producto.cantidad}">
+                        <input type="hidden" id="nombreProducto${idVenta}" value="${producto.id}">
+                        <span class="input-group-btn">
+                            <input  class="btn btn-success btn_anular" type="button " value=" Anular venta" ventaId="${idVenta}">
+                         </span>
+                        </div>
+                    </td>
+                `
+                 $('#tablaVentas').html(tabla);
 
-            
-           
+            });  
+            $(document).on('click','.btn_anular',function(e){
+                e.preventDefault();//https://es.stackoverflow.com/questions/121205/evitar-que-el-evento-click-se-ejecute-dos-veces
+                e.stopImmediatePropagation();
+                let idVenta = $(this).attr('ventaId');
+                let cantidad = parseInt($('#cantidad'+idVenta).val());
+                let producto = $('#nombreProducto'+idVenta).val();
+                console.log(idVenta);
+                console.log(cantidad);
+                console.log(producto);
+                anularVenta(idVenta,cantidad,producto);
+                idVenta = 0;
+                cantidad = 0;
+                producto = 0;
+
+            });
         }
+    
     });
     
+}
+/**Fin procesarVenta() */
 
-    
-    
-    
+/**Función anularVenta(id,cantidad)*/
+function anularVenta(idVenta,cantidad,producto){
+    $.ajax({
+        type: "POST",
+        url: "../backend/anularVenta.php",
+        data: {idVenta,cantidad,producto},
+        success: function (response) {
+            document.getElementById('ultimaVenta').style.display="none";
+            document.getElementById('eliminarVenta').style.display="block";
+            document.getElementById('ventaEliminada').innerHTML=response;
+            document.getElementById('ventaEliminada').style.display="block";
+
+
+            
+        }
+    });
 
 }
+/**Fin anularVenta */
+/**Función mostrarVentas()*/
 
+/**Fin mostarVentas */
    
 
 

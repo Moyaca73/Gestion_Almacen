@@ -99,7 +99,6 @@ function venta($producto, $unidades){
     $select = "SELECT stock, precio_venta, id  FROM productos WHERE id = '$producto'";
 
     $result = $db->query($select);
-    $nuevoStock = 0;
     if($result->rowCount()==1){
         foreach ($result as $venta){
             $stock = intval($venta['stock']);
@@ -110,7 +109,7 @@ function venta($producto, $unidades){
         if($stock >= $unidades){
             $nuevoStock  = $stock - $unidades;
     //Si hay suficiente stock, modificamos el stock
-    $query = "UPDATE productos SET stock = '$nuevoStock' Where id = '$producto'";
+    $query = "UPDATE productos SET stock = $nuevoStock Where id = '$producto'";
 
     $result= $db->query($query);
     if(!$result){
@@ -127,7 +126,7 @@ function venta($producto, $unidades){
         }
     }
     //generar el registro de la nueva venta
-    $insert = "INSERT INTO ventas (`producto_id`, `cantidad`, `precio`, `fecha`) VALUES ('$idProducto','$unidades','$precio_venta',now())";
+    $insert = "INSERT INTO ventas (`producto_id`, `cantidad`, `precio`, `fecha`) VALUES ('$idProducto',$unidades,'$precio_venta',now())";
 
     $result = $db->query($insert);
 
@@ -144,25 +143,13 @@ function venta($producto, $unidades){
     return $venta;
 
 }
-/*función nuevaVenta($producto,$unidades)*/
-function nuevaVenta($producto,$unidades,$precio_venta){
-    $nuevoStock = comprobarStock($producto,$unidades);
-    if($nuevoStock >= 0){
-        cambiarStock($producto,$nuevoStock);
-        archivarVenta($producto,$unidades,$precio_venta);
-       $venta = mostrarUltimaVenta();
-        return $venta;
-    }else {
-        return FALSE;
-    }
-    
-}
+
 /**Función mostrarUltimaVenta() */
 function mostrarUltimaVenta(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
 
-    $select = "SELECT p.nombre, v.id, v.cantidad, v.precio FROM ventas AS v join productos AS p WHERE v.id = (SELECT MAX(id) FROM ventas) AND p.id = v.producto_id";
+    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
 
     $result = $db->query($select);
 
@@ -176,59 +163,46 @@ function mostrarUltimaVenta(){
     
 }
 
-/**Función archivarVenta($producto,$unidades,$precio_venta) */
-function archivarVenta($producto,$unidades,$precio_venta){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+/**Función anularVenta($id,$cantidad) */
+function anularVenta($idVenta,$cantidad,$producto){
+    //conexión
+$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
-
-    $insert = "INSERT INTO ventas (`producto_id`, `cantidad`, `precio`, `fecha`) VALUES ('$producto','$unidades','$precio_venta',now())";
-
-    $result = $db->query($insert);
-
+    //inicio de la transacción
+    $db->beginTransaction();
+    //borrar la venta de la base de datos
+    $delete = "DELETE FROM ventas WHERE idVenta = $idVenta and cantidad = $cantidad";
+    $result = $db->query($delete);
+    
     if(!$result){
-        die ("fallo en la entrada del stock");
-    
+        //si no se ha borrado, anular la transacción
+        $db->rollBack();
+        return "borrado";
     }
-}
-
-/*funcion  comprobarStock($producto,$unidades)*/
-function  comprobarStock($producto,$unidades){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
-
-    $select = "SELECT stock, precio_venta  FROM productos WHERE id = '$producto'";
-
-    
-
+    //Averiguar el stock existente
+    $select = "SELECT stock FROM productos WHERE id = '$producto' ";
     $result = $db->query($select);
-    $nuevoStock = 0;
     if($result->rowCount()==1){
-        foreach ($result as $stock){
-        if(intval($stock['stock']) >= intval($unidades)){
-            $nuevoStock  = intval($stock['stock']) - intval($unidades);
-            return $nuevoStock;
-        }else{
-            return $stock['stock'];
-
+        foreach ($result as $produ){
+            $stock = intval($produ['stock']);
         }
-        }
-    }else {
-        return FALSE;
+    }else{
+        $db->rollBack();
+        return "No se pudo anular la venta (error al comprobar el estock";
     }
+    $nuevoStock = $cantidad + $stock;
 
-
-}
-/**Función  cambiarStock($producto,$nuevoStock)*/
-function cambiarStock($producto,$nuevoStock){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
-    $query = "UPDATE productos SET stock = '$nuevoStock' Where id = '$producto'";
-
-    $result= $db->query($query);
-    if(!$result){
-        die ("fallo en la entrada del stock");
+    //Aumentar las unidades al stock
+    $update =  "UPDATE productos SET stock = $nuevoStock Where id = '$producto'";    
     
-    }
+    $result = $db->query($update);
 
+    if(!$result){
+        $db->rollBack();
+        return "No se pudo anular la venta (error al aumentar las unidades)";
+    }
+     //cerrar la transacción
+     $db->commit();
+     return "Venta $idVenta anulada";
 
 }
