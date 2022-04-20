@@ -2,20 +2,34 @@
 //*gestión de ventas*/
 //nueva venta
 $(document).on('click', '#nuevaVenta', function(e){
-    document.getElementById('ultimaVenta').style.display="none";
-    document.getElementById('venta').style.display="block";
+    document.getElementById('productosVenta').style.display="block";
+    document.getElementById('ventas').style.display="none";
     document.getElementById('ventaEliminada').style.display="none";
     mostarProductos();
 })
 //eliminar venta
-$(document).on('click', '#nuevaVenta', function(e){
-    document.getElementById('ultimaVenta').style.display="none";
-    document.getElementById('venta').style.display="none";
+$(document).on('click', '#eliminarVenta', function(e){
+    document.getElementById('productosVenta').style.display="none";
+    document.getElementById('ventaCorrecta').style.display="none";
+    document.getElementById('ventas').style.display="block";
     document.getElementById('ventaEliminada').style.display="none";
-    mostarVentas();
+    todasLasVentas();
+    
 })
+//**fin gestión de ventas */
+//**Informe de ventas */
+//Última venta
+$(document).on('click', '#ultimaVenta', function(e){
+    document.getElementById('productosVenta').style.display="none";
+    document.getElementById('ventaCorrecta').style.display="none";
+    document.getElementById('ventas').style.display="block";
+    document.getElementById('ventaEliminada').style.display="none";
+    informeUltimaVenta();
+    
+})
+/**fin informe de ventas */
 
-//buscar productos 
+
 /*****************Fin Aplicación********* */
 
 /**Funciones para solicitar datos al sevidor */
@@ -89,10 +103,10 @@ function mostarProductos(){
         success: function (response) {
             
             let productos = JSON.parse(response);
-            let tabla ='';
+            let fila ='';
             productos.forEach(producto => {
                 let id = producto.id;
-                tabla += `
+                fila += `
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
@@ -111,8 +125,9 @@ function mostarProductos(){
                          </span>
                         </div>
                     </td>
+                    </tr>
                 `
-                 $('#tablaVenta').html(tabla);
+                 $('#tablaVenta').html(fila);
                
             });
             $(document).on('click','.btn_venta', function(e){
@@ -152,49 +167,12 @@ function procesarVenta(producto,unidades,precio_venta){
         data: {producto,unidades,precio_venta},
         success: function (response) {
             console.log(response);
-            document.getElementById('venta').style.display="none";
+            document.getElementById('productosVenta').style.display="none";
             document.getElementById('ventas').style.display="block";
             document.getElementById('ventaCorrecta').style.display="block";
             let venta = JSON.parse(response);
-            let tabla ='';
-            venta.forEach(producto => {
-                let idVenta = producto.idVenta;
-                let total =parseInt(producto.cantidad) * parseFloat(producto.precio);
-                tabla += `
-                    <tr>
-                    <td>${producto.idVenta}</td>
-                    <td>${producto.nombre}</td>
-                    <td>${producto.cantidad}</td>
-                    <td>${producto.precio}</td>
-                    <td>${total}</td>
-                    <td>
-                        <div class="input-group ">
-                        <input type="hidden" id="cantidad${idVenta}" value="${producto.cantidad}">
-                        <input type="hidden" id="nombreProducto${idVenta}" value="${producto.id}">
-                        <span class="input-group-btn">
-                            <input  class="btn btn-success btn_anular" type="button " value=" Anular venta" ventaId="${idVenta}">
-                         </span>
-                        </div>
-                    </td>
-                `
-                 $('#tablaVentas').html(tabla);
-
-            });  
-            $(document).on('click','.btn_anular',function(e){
-                e.preventDefault();//https://es.stackoverflow.com/questions/121205/evitar-que-el-evento-click-se-ejecute-dos-veces
-                e.stopImmediatePropagation();
-                let idVenta = $(this).attr('ventaId');
-                let cantidad = parseInt($('#cantidad'+idVenta).val());
-                let producto = $('#nombreProducto'+idVenta).val();
-                console.log(idVenta);
-                console.log(cantidad);
-                console.log(producto);
-                anularVenta(idVenta,cantidad,producto);
-                idVenta = 0;
-                cantidad = 0;
-                producto = 0;
-
-            });
+            mostarVentas(venta);
+            
         }
     
     });
@@ -202,6 +180,53 @@ function procesarVenta(producto,unidades,precio_venta){
 }
 /**Fin procesarVenta() */
 
+
+/**Función mostrarVentas(ventas)*/
+function mostarVentas(ventas){
+    let fila = '';
+    ventas.forEach(producto => {
+        let idVenta = producto.idVenta;
+        let total =parseInt(producto.cantidad) * parseFloat(producto.precio);
+       
+        fila += `
+            <tr>
+            <td>${producto.idVenta}</td>
+            <td>${producto.fecha}</td>
+            <td>${producto.nombre}</td>
+            <td>${producto.cantidad}</td>
+            <td>${producto.precio}</td>
+            <td>${total}</td>
+            <td>
+                <div class="input-group ">
+                <input type="hidden" id="cantidad${idVenta}" value="${producto.cantidad}">
+                <input type="hidden" id="nombreProducto${idVenta}" value="${producto.id}">
+                <span class="input-group-btn">
+                    <input  class="btn btn-success btn_anular" type="button " value=" Anular venta" ventaId="${idVenta}">
+                 </span>
+                </div>
+            </td>
+        `
+         $('#tablaVentas').html(fila);
+
+    });  
+    $(document).on('click','.btn_anular',function(e){
+        e.preventDefault();//https://es.stackoverflow.com/questions/121205/evitar-que-el-evento-click-se-ejecute-dos-veces
+        e.stopImmediatePropagation();
+        let idVenta = $(this).attr('ventaId');
+        let cantidad = parseInt($('#cantidad'+idVenta).val());
+        let producto = $('#nombreProducto'+idVenta).val();
+        console.log(idVenta);
+        console.log(cantidad);
+        console.log(producto);
+        anularVenta(idVenta,cantidad,producto);
+        idVenta = 0;
+        cantidad = 0;
+        producto = 0;
+
+    });
+}
+
+/**Fin mostarVentas */
 /**Función anularVenta(id,cantidad)*/
 function anularVenta(idVenta,cantidad,producto){
     $.ajax({
@@ -209,21 +234,53 @@ function anularVenta(idVenta,cantidad,producto){
         url: "../backend/anularVenta.php",
         data: {idVenta,cantidad,producto},
         success: function (response) {
-            document.getElementById('ultimaVenta').style.display="none";
+            console.log(response);
+            document.getElementById('ventas').style.display="none";
             document.getElementById('eliminarVenta').style.display="block";
             document.getElementById('ventaEliminada').innerHTML=response;
             document.getElementById('ventaEliminada').style.display="block";
 
-
-            
         }
     });
 
 }
 /**Fin anularVenta */
-/**Función mostrarVentas()*/
+/**Función todasLasVentas() */
+function todasLasVentas(){
+    $.ajax({
+        type: "Get",
+        url: "../backend/ventas.php",
+       //cuando recibe la respuesta
+        success: function (response) {
+            let ventas = JSON.parse(response);
+            mostarVentas(ventas);
+        }
+        })
 
-/**Fin mostarVentas */
-   
+}
+/**Fin todasLasVentas() */
+/*Función informeVentas(ventas)*/
+function informeVentas(ventas){
+    let totalVentas = 0;
+    let fila = '';
+    ventas.forEach(producto => {
+        let total =parseInt(producto.cantidad) * parseFloat(producto.precio);
+        fila += `
+            <tr>
+            <td>${producto.idVenta}</td>
+            <td>${producto.fecha}</td>
+            <td>${producto.nombre}</td>
+            <td>${producto.cantidad}</td>
+            <td>${producto.precio}</td>
+            <td>${total}</td>
+            </tr>
+        `
+         $('#tablaVentas').html(fila);
+         totalVentas += totalVentas;
+
+    });  
+}
+
+/*fin informeVentas()*/
 
 

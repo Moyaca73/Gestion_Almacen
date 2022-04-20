@@ -149,7 +149,7 @@ function mostrarUltimaVenta(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
 
-    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
+    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
 
     $result = $db->query($select);
 
@@ -206,3 +206,25 @@ $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\conf
      return "Venta $idVenta anulada";
 
 }
+/**Fin anularVenta() */
+
+/**Función ventasTodas() */
+function ventasTodas(){
+    //conexión
+$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+//consulta
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id";
+
+$result = $db->query($select);
+
+if($result->rowCount() > 0){
+    return $result;
+
+}else {
+    return FALSE;
+}
+
+
+}
+/**Fin ventasTodas() */
