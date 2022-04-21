@@ -228,3 +228,47 @@ if($result->rowCount() > 0){
 
 }
 /**Fin ventasTodas() */
+/**Función  mostrarVentasDia(fecha) */
+function  mostrarVentasDia($fecha){
+    //conexión
+$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+//consulta
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) = '$fecha' AND  p.id = v.producto_id ";
+
+//para separar la fecha en la consulta
+//https://bahiaxip.com/entrada/fechas-en-mysql
+$result = $db->query($select);
+
+if($result->rowCount() > 0){
+    return $result;
+
+}else {
+    return FALSE;
+}
+
+
+}
+/**fin  mostrarVentasDia() */
+/**Función  mostrarVentasPeriodo(fecha) */
+function  mostrarVentasPeriodo($desde,$hasta){
+    //conexión
+$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+$db=new PDO($res[0],$res[1],$res[2]);
+//consulta
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) >= '$desde' AND DATE(v.fecha) <= '$hasta' AND  p.id = v.producto_id ";
+
+//para separar la fecha en la consulta
+//https://bahiaxip.com/entrada/fechas-en-mysql
+$result = $db->query($select);
+
+if($result->rowCount() > 0){
+    return $result;
+
+}else {
+    return FALSE;
+}
+
+
+}
+/**fin  mostrarVentasDia() */

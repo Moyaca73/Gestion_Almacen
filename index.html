@@ -77,8 +77,8 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="botonInformeVentas">
               <li><a id="ultimaVenta" class="dropdown-item" href="#">última venta</a></li>
-              <li><a class="dropdown-item" href="#">ventas del día</a></li>
-              <li><a class="dropdown-item" href="#">ventas del periodo</a></li>
+              <li><a id="ventasDia" class="dropdown-item" href="#">ventas del día</a></li>
+              <li><a id="ventasPeriodo" class="dropdown-item" href="#">ventas del periodo</a></li>
             </ul>
           </div>
         </li>
@@ -183,7 +183,8 @@
                   </div>
                 </div>
             </div>
-           
+            <!--Fin nueva venta-->
+           <!-- Ventas-->
             <div id="ventas" class="row" style="display: none;">
               <h1 id="ventaCorrecta" >La venta ha sido procesada correctamente</h1>
               <div class="col" >
@@ -202,15 +203,57 @@
                 </table>
               </div>
             </div>
-            <!--última Venta-->
-            <!--Fin nueva venta-->
+            
+            <!--Fin ventas-->
             <!--eliminar Venta-->
             <div id="eliminarVenta" style="display: block;">
               <h1 id="ventaEliminada" style="display: block;"></h1>
 
             </div>
             <!--Fin eliminar Venta-->
-            
+            <!--Informe de ventas-->
+            <div id="informeVentas" class="row" style="display: none;">
+              <div class="col" >
+                <!--Formulario Periodo-->
+                <form id="formularioPeriodo">
+                  <div class="row">
+                    <div class="col">
+                      <label for="desde">Desde</label>
+                      <input type="date" class="form-control" id="desde"
+                       required>
+                    </div>
+                    <div class="col">
+                      <label for="hasta">Hasta</label>
+                      <input type="date"
+                       class="form-control"
+                       id="hasta"
+                      placeholder="fecha fin">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Informe</button>
+                </form>
+                <!--Fin Formulario Periodo-->
+                <H1 id="cabeceraInforme"></H1>
+                <table class="table table-borderless">
+                  <tr>
+                    <th>ID</th>
+                    <th>FECHA</th>
+                    <th>NOMBRE</th>
+                    <th>CANTIDAD</th>
+                    <th>PRECIO</th>
+                    <th>TOTAL</th>
+                  </tr>
+                  <tbody id="tablaInformeVentas">
+                  </tbody>
+                  <tr>
+                    <th style="text-align: end;" colspan="5">Total ventas</th>
+                    <td id="totalVentas"></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!--Fin Informe de ventas-->
+
           </div>
         </div>
       </div>
