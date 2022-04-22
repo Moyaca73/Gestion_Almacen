@@ -212,8 +212,8 @@
             </div>
             <!--Fin eliminar Venta-->
             <!--Informe de ventas-->
-            <div id="informeVentas" class="row" style="display: none;">
-              <div class="col" >
+            <div id="informeVentas" style="display: none;">
+              
                 <!--Formulario Periodo-->
                 <form id="formularioPeriodo">
                   <div class="row">
@@ -227,14 +227,16 @@
                       <input type="date"
                        class="form-control"
                        id="hasta"
-                      placeholder="fecha fin">
+                      >
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary">Informe</button>
                 </form>
                 <!--Fin Formulario Periodo-->
                 <H1 id="cabeceraInforme"></H1>
-                <table class="table table-borderless">
+              <div class="row">
+              <div class="col" >
+                <table id="tablaInformeVentas" class="table  table-bordered table-hover table-active">
                   <tr>
                     <th>ID</th>
                     <th>FECHA</th>
@@ -243,14 +245,15 @@
                     <th>PRECIO</th>
                     <th>TOTAL</th>
                   </tr>
-                  <tbody id="tablaInformeVentas">
-                  </tbody>
-                  <tr>
-                    <th style="text-align: end;" colspan="5">Total ventas</th>
-                    <td id="totalVentas"></td>
-                  </tr>
+                    <tbody id="informeVentasBody">
+                    </tbody>
+                    <tr>
+                      <th style="text-align: end;" colspan="5">Total ventas</th>
+                      <td id="totalVentas"></td>
+                    </tr>
                 </table>
               </div>
+            </div>
             </div>
             <!--Fin Informe de ventas-->
 

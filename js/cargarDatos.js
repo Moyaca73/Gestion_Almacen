@@ -47,18 +47,20 @@ $(document).on('click', '#ventasDia', function(e){
 })
 
 //fin ventas del día
-//Ventas del día
+//Ventas del periodo
 $(document).on('click', '#ventasPeriodo', function(e){
     document.getElementById('productosVenta').style.display="none";
     document.getElementById('ventaCorrecta').style.display="none";
     document.getElementById('ventas').style.display="none";
     document.getElementById('ventaEliminada').style.display="none";
+    document.getElementById('tablaInformeVentas').style.display="none";
+    document.getElementById('cabeceraInforme').style.display="none";
     document.getElementById('informeVentas').style.display="block";
     informeVentasPeriodo();
     
 })
 
-//fin ventas del día
+//fin ventas del periodo
 
 
 /**fin informe de ventas */
@@ -308,6 +310,8 @@ function todasLasVentas(){
 /**Fin todasLasVentas() */
 /**Función informeUltimaVenta() */
 function informeUltimaVenta(){
+    document.getElementById('formularioPeriodo').style.display="none";
+    document.getElementById('cabeceraInforme').style.display="block";
     let mensage = 'Última venta';
     $.ajax({
         type: "Get",
@@ -319,6 +323,7 @@ function informeUltimaVenta(){
                 informeVentas(ventas,mensage);
                 }else{
                     document.getElementById('cabeceraInforme').innerHTML = response;
+                    document.getElementById('informeVentas').style.display="none";
                 }
         }
         })
@@ -327,6 +332,8 @@ function informeUltimaVenta(){
 /**Fin informeUltimaVenta() */
 /**Función informeVentasDia(fecha) */
 function informeVentasDia(fecha){
+    document.getElementById('formularioPeriodo').style.display="none";
+    document.getElementById('cabeceraInforme').style.display="block";
     let mensage = 'Ventas del día';
     $.ajax({
         type: "Get",
@@ -339,6 +346,7 @@ function informeVentasDia(fecha){
             informeVentas(ventas,mensage);
             }else{
                 document.getElementById('cabeceraInforme').innerHTML = response;
+                document.getElementById('tablaInformeVentas').style.display="none";
             }
         }
         })
@@ -350,10 +358,18 @@ function informeVentasDia(fecha){
 
 /**Función informeVentasPeriodo() */
 function informeVentasPeriodo(){
+    document.getElementById('formularioPeriodo').style.display="block";
+    document.getElementById('cabeceraInforme').style.display="block";
+    let mensage = 'Ventas del periodo';
+    document.getElementById('cabeceraInforme').innerHTML = mensage;
+    $('#hasta').val(fechaBusquedas());//ponemos la fecha actual por defecto
    $('#informeVentas').submit(function (e) { 
            let desde = $('#desde').val();
            let hasta = $('#hasta').val();
-           let mensage = 'Ventas del periodo desde '+desde+' hasta '+hasta;
+           if(desde > hasta){
+               alert('La fecha de inicio debe se anterior a la fecha de fin');
+           }else{
+             mensage = 'Ventas del periodo desde ' + desde + ' hasta ' + hasta;
            console.log(desde);
            console.log(hasta);
            $.ajax({
@@ -367,11 +383,14 @@ function informeVentasPeriodo(){
                     informeVentas(ventas,mensage);
                     }else{
                         document.getElementById('cabeceraInforme').innerHTML = response;
+                        document.getElementById('tablaInformeVentas').style.display="none";
                     }
                    
                    
                }
+            
            });
+        }
 
        
        
@@ -400,6 +419,7 @@ function informeVentas(ventas,mensage){
     let totalVentas = 0;
     let fila = '';
     document.getElementById('cabeceraInforme').innerHTML = mensage;
+    document.getElementById('tablaInformeVentas').style.display="block";
 
     ventas.forEach(producto => {
         let total =parseInt(producto.cantidad) * parseFloat(producto.precio);
@@ -413,7 +433,7 @@ function informeVentas(ventas,mensage){
             <td>${total}</td>
             </tr>
         `
-         $('#tablaInformeVentas').html(fila);
+         $('#informeVentasBody').html(fila);
          totalVentas += total;
 
     });  

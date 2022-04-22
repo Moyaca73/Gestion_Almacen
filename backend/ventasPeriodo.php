@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ventas_json = json_encode(iterator_to_array($ventas),true);
         echo $ventas_json;
         }else
-       echo 'No se hay ventas que mostrar';
+       echo 'No se han realizado ventas en el periodo: ' . $desde . ' hasta: ' . $hasta; 
        
     }
     return false;
