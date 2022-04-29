@@ -23,6 +23,12 @@ function leer_config($ficheroXML,$eschema){
     return $result;
     
     }
+/**Función conexion() */
+function conexion(){
+    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
+    $db=new PDO($res[0],$res[1],$res[2]);
+    return $db;
+}
 
 /**Función comprobar usuario */
 function comprobar_usuario($nombre_usuario,$clave){
@@ -177,7 +183,8 @@ $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\conf
     if(!$result){
         //si no se ha borrado, anular la transacción
         $db->rollBack();
-        return "borrado";
+        $error = "No se ha borrado la venta";
+        return $error;
     }
     //Averiguar el stock existente
     $select = "SELECT stock FROM productos WHERE id = '$producto' ";
@@ -188,7 +195,8 @@ $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\conf
         }
     }else{
         $db->rollBack();
-        return "No se pudo anular la venta (error al comprobar el estock";
+        $error =  "No se pudo anular la venta (error al comprobar el stock)";
+        return $error;
     }
     $nuevoStock = $cantidad + $stock;
 
@@ -199,11 +207,13 @@ $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\conf
 
     if(!$result){
         $db->rollBack();
-        return "No se pudo anular la venta (error al aumentar las unidades)";
+        $error = "No se pudo anular la venta (error al aumentar las unidades)";
+        return $error;
     }
      //cerrar la transacción
      $db->commit();
-     return "Venta $idVenta anulada";
+     $ventaAnulada = "Venta $idVenta anulada";
+     return $ventaAnulada;
 
 }
 /**Fin anularVenta() */
@@ -272,3 +282,141 @@ if($result->rowCount() > 0){
 
 }
 /**fin  mostrarVentasDia() */
+
+/**Función crearUsuario($nombre,$nombreUsuario,$clave,$rol,$status) */
+function crearUsuario($nombre,$nombreUsuario,$clave,$rol,$status){
+    $db = conexion();
+    //transacción
+    $db->beginTransaction();
+    //comprovar si ya existe el nombre de usuario 
+    $select = "SELECT nombre_usuario FROM usuarios WHERE nombre_usuario = '$nombreUsuario'";
+    $result = $db->query($select);
+    if($result->rowCount() == 1){
+        //existe el usuario
+        $db->rollBack();
+        $error = "El usuario <b>$nombreUsuario</b> ya existe";
+        return $error;
+    }else{
+        //creación del nuevo usuario
+        $insert ="INSERT INTO `usuarios`(`nombre`, `nombre_usuario`, `clave`, `rol`, `status`) VALUES ('$nombre', '$nombreUsuario', '$clave', $rol, $status) ";
+        $result = $db->query($insert);
+        if(!$result){
+            $db->rollBack();
+            $error = "Error en la creación del usuario $nombreUsuario";
+            return $error;
+        }else{
+            $db->commit();
+            $creado = "El usuario $nombreUsuario ha sido creado correctamente";
+            return $creado;
+        }
+        
+    }
+
+}
+/**Fin crearUsuario */
+/**Función usuariosTodos()*/
+function usuariosTodos(){
+    //conexión
+    $db=conexion();
+    $select = "SELECT u.*, r.nombre_grupo FROM usuarios AS u JOIN grupos_usuarios AS r 
+    WHERE u.rol = r.rol_grupo";
+    $result = $db->query($select);
+    if($result->rowCount() > 0){
+        return $result;
+    }else{
+    
+        return false;
+    }
+
+}
+/**Fin usuariosTodos() */
+
+/**Función bajaUsuario($id,$nombreUsuario) */
+function bajaUsuario($id,$nombreUsuario){
+    $db = conexion();
+    $delete = "DELETE FROM usuarios WHERE id = $id AND nombre_usuario = '$nombreUsuario'";
+    $result = $db->query($delete);
+    if($result->rowCount() == 1){
+        return true;
+    }else{
+        return false;
+    }
+}
+/**Fin bajaUsuario() */
+
+/**Función crearProducto($nombre,$stock,$precioCompra,$precioVenta,$categoria) */
+function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria){
+    $db = conexion();
+    //comprovar que existe la categoría del producto o crear una nueva
+    $db->beginTransaction();
+    $select = "SELECT id FROM categorias WHERE nombre_categoria = '$categoria'";
+    $result = $db->query($select);
+    if($result->rowCount() == 1){
+        foreach($result as $id){
+            $categoria = $id['id'];
+        }  
+    }else if($result->rowCount() == 0){
+        $insert = "INSERT INTO categorias(nombre_categoria) VALUES ('$categoria')";
+        $result = $db->query($insert);
+        $select = "SELECT id FROM categorias WHERE nombre_categoria = '$categoria'";
+    $result = $db->query($select);
+    if($result->rowCount() == 1){
+        foreach($result as $id){
+            $categoria = $id['id'];
+        }  
+    }else{
+        $db->rollBack();
+        $error = "no se ha podido crear la nueva categoría";
+        return $error;
+    }
+ }
+    
+    // comprobar que no existe ya el producto
+    $select = "SELECT nombre FROM productos WHERE nombre ='$nombre'";
+    $result = $db->query($select);
+    if($result->rowCount() == 1){
+        $db->rollBack();
+        $error = "El ya existe un producto con el nombre: $nombre";
+        return $error;
+    }
+    //creción del nuevo producto
+    $insert = "INSERT INTO productos (nombre, stock, precio_compra, precio_venta, categoria_id, creado) VALUES ('$nombre', $stock, $precioCompra, $precioVenta, $categoria, NOW()) ";
+    $result = $db->query($insert);
+    if(!$result){
+        $db->rollBack();
+        $error = "No se ha podido crear el nuevo producto";
+        return $error;
+    }
+    $db->commit();
+    $nuevoProducto = "El producto $nombre está listo para su venta";
+    return $nuevoProducto;
+ 
+}
+/**Fin crearProducto() */
+/**Función mostrarProducto($nombre) */
+function mostrarProducto($nombre){
+    $db=conexion();
+    $select = "SELECT * FROM productos WHERE nombre = '$nombre'";
+    $result = $db->query($select);
+    if($result->rowCount() == 1){
+        return $result;
+    }else{
+        $error = "No se ha encontrado el producto $nombre";
+        return $error;
+    }
+}
+/**Fin mostrarProducto($nombre) */
+/**Función bajaProducto($id) */
+function bajaProducto($id){
+    $db = conexion();
+    $delete = "DELETE FROM productos WHERE id = $id";
+    $result = $db->query($delete);
+    if($result->rowCount() == 1){
+        return true;
+    }else{
+        return false;
+    }
+}
+/**Fin bajaProducto($id) */
+
+

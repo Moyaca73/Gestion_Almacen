@@ -6,8 +6,7 @@
         $cantidad = $_POST['cantidad'];
         $producto = $_POST['producto'];
         $anulacion = anularVenta($id,$cantidad,$producto);
-        echo $anulacion;
-         
+        echo $anulacion; 
       }
     
     
