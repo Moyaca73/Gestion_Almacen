@@ -83,7 +83,7 @@ function nuevoAcceso($nombre_usuario){
 function cargarProductos(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
-    $select = "SELECT p.id, p.nombre, p.precio_venta, p.stock, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
+    $select = "SELECT p.id, p.nombre, p.precio_compra, p.precio_venta, p.stock, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
 
     $result= $db->query($select);
     if($result->rowCount()>=1){
@@ -101,7 +101,7 @@ function venta($producto, $unidades){
     $db=new PDO($res[0],$res[1],$res[2]);
     //comienzo de la transacción
     $db->beginTransaction();
-    //comprovar el stock 
+    //comproBar el stock 
     $select = "SELECT stock, precio_venta, id  FROM productos WHERE id = '$producto'";
 
     $result = $db->query($select);
@@ -418,5 +418,42 @@ function bajaProducto($id){
     }
 }
 /**Fin bajaProducto($id) */
+/**Función procesarCompra($producto,$unidades,$precioVenta,$precioCompra,$stock) */
+function procesarCompra($producto,$unidades,$precioVenta,$precioCompra,$stock){
+    $total = $unidades * $precioCompra;
+    $db = conexion();
+    $db->beginTransaction();
+    $insert = "INSERT INTO compras (producto_id,unidades,precio_compra,precio_venta,total,fecha) VALUES ($producto,$unidades,$precioCompra,$precioVenta,$total,now())";
+    $result = $db->query($insert);
+    If(!$result){
+        $db->rollBack();
+        return false;
+    }
+    $update = "UPDATE productos SET stock = $stock, precio_compra = $precioCompra, precio_venta = $precioVenta WHERE id = $producto";
+    $result = $db->query($update);
+    if($result->rowCount() == 1){
+        $db->commit();
+        $compra = mostrarUltimaCompra();
+        return $compra;
+    }else{
+        return false;
+    }
+    
+
+}
+/**Fin Función procesarCompra() */
+/**Función mostrarUltimaCompra() */
+function mostrarUltimaCompra(){
+    $db = conexion();
+$select = "SELECT * FROM compras WHERE id = (SELECT MAX(id) FROM compras)";
+$result = $db->query($select);
+if($result->rowCount() == 1){
+    return $result;
+}else{
+    return false;
+}
+}
+
+/**Fin mostrarUltimaCompra() */
 
 
