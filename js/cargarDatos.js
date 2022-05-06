@@ -15,6 +15,7 @@ $(document).on('click', '#nuevaVenta', function(e){
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
     document.getElementById('productosVenta').style.display="block";
+    document.getElementById('bajaProductos').style.display="none";
     mostrarProductosVenta();
 })
 //eliminar venta
@@ -29,6 +30,7 @@ $(document).on('click', '#eliminarVenta', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     todasLasVentas();
     
 })
@@ -45,6 +47,7 @@ $(document).on('click', '#ultimaVenta', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('informeVentas').style.display="block";
     informeUltimaVenta();
     
@@ -62,6 +65,7 @@ $(document).on('click', '#ventasDia', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('informeVentas').style.display="block";
     informeVentasDia(fechaBusquedas());
     
@@ -81,6 +85,7 @@ $(document).on('click', '#ventasPeriodo', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('informeVentas').style.display="block";
     informeVentasPeriodo();
     
@@ -106,6 +111,7 @@ $(document).on('click', '#altaNuevoUsuario', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('formularioAltaNuevoUsuario').style.display="block";
     altaNuevoUsuario();
     
@@ -124,6 +130,7 @@ $(document).on('click', '#bajaUsuario', function(e){
     document.getElementById('formularioAltaNuevoProducto').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('listaUsuarios').style.display="block";
     mostrarUsuarios();
 });
@@ -142,6 +149,7 @@ $(document).on('click', '#altaProducto', function(e){
     document.getElementById('listaUsuarios').style.display="none";
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
     document.getElementById('formularioAltaNuevoProducto').style.display="block";
     altaProducto();
    });
@@ -271,7 +279,7 @@ function mostrarProductosVenta(){
         url: "../backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
-            
+            console.log(response);
             let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -280,6 +288,7 @@ function mostrarProductosVenta(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
+                    <td><img class="img-fluid" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_venta}</td>
                     <td>${producto.nombre_categoria}</td>
@@ -672,16 +681,22 @@ function bajaUsuario(id,nombreUsuario){
 /**Función altaProducto() */
 function altaProducto(){
     $('#nuevoProducto').submit(function (e){
+        e.preventDefault();
         let nombre = $('#nombreProducto').val();
         let stock = parseInt($('#stock').val());
         let precioCompra = $('#precioCompra').val();
         let precioVenta = $('#precioVenta').val();
         let categoria = $('#categoria').val();
+        let imagen = $('#imagen')[0].files[0];
+        
 
         $.ajax({
             type: "post",
             url: "../backend/altaNuevoProducto.php",
-            data: {nombre, stock,precioCompra, precioVenta, categoria },
+            data: new FormData(this),
+            contentType:"json",
+            contentType: false,
+            processData: false,
             success: function (response) {
                 $("#nuevoProducto")[0].reset();
                 document.getElementById('productoCrear').innerHTML=response;
@@ -730,10 +745,10 @@ function mostrarProductosBaja(){
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 let id = $(this).attr('productoId');
-                let nombre = $(this).attr('productoNombre').val();
+                let nombre = $(this).attr('productoNombre');
                 alert(`Estás apunto de borrar el producto: ${nombre}`);
                if( confirm('Comfirmación de borrado del producto: ' + nombre)){
-                bajaProducto(id, nombre);
+                bajaProducto(id,nombre);
                }else{
                 document.getElementById('bajaProductoEstado').style.display="block";
                 document.getElementById('bajaProductoEstado').innerHTML = `El producto id= ${id} nombre: ${nombre} no ha sido eliminado.`

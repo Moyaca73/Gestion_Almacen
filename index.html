@@ -149,6 +149,7 @@
                   <tr>
                     <th>ID</th>
                     <th>NOMBRE</th>
+                    <th>IMAGEN</th>
                     <th>STOCK</th>
                     <th>PRECIO</th>
                     <th>CATEGORIA</th>
@@ -292,29 +293,33 @@
           <!--Alta nuevo producto-->
           <div id="formularioAltaNuevoProducto" style="display: none;">
             <h1 id="productoCrear">Introduzca los datos del nuevo producto</h1>
-            <form id="nuevoProducto">
+            <form id="nuevoProducto" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-4">
                   <label for="nombre">Nombre</label>
-                  <input class="form-control" type="text" id="nombreProducto" required>
+                  <input class="form-control" type="text" id="nombreProducto" name="nombre" required>
                 </div>
                 <div class="col-4">
                   <label for="stock">Stock</label>
-                  <input class="form-control" type="number" min="0" value="0" id="stock">
+                  <input class="form-control" type="number" min="0" value="0" id="stock" name="stock">
                 </div>
                 <div class="col-4">
                   <label for="precioCompra">Precio de compra</label>
-                  <input class="form-control" type="number" min="0" step="0.01" id="precioCompra" required>
+                  <input class="form-control" type="number" min="0" step="0.01" id="precioCompra" name="precioCompra" required>
                 </div>
               </div>
               <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                   <label for="precioVenta">Precio de venta</label>
-                  <input class="form-control" type="number" min="0" step="0.01" id="precioVenta" required>
+                  <input class="form-control" type="number" min="0" step="0.01" id="precioVenta" name="precioVenta" required>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                   <label for="categoria">Categoría</label>
-                  <input class="form-control" type="text" id="categoria" required>
+                  <input class="form-control" type="text" id="categoria" name="categoria" required>
+                </div>
+                <div class="col-4">
+                  <label for="imagen">Imágen</label>
+                  <input class="form-control" type="file" id="imagen" name="imagen" required>
                 </div>
               </div>
               <button type="submit" class="btn btn-secondary">Alta producto</button>

@@ -83,7 +83,7 @@ function nuevoAcceso($nombre_usuario){
 function cargarProductos(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
-    $select = "SELECT p.id, p.nombre, p.precio_compra, p.precio_venta, p.stock, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
+    $select = "SELECT p.id, p.nombre, p.precio_compra, p.precio_venta, p.stock, p.imagen, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
 
     $result= $db->query($select);
     if($result->rowCount()>=1){
@@ -345,7 +345,7 @@ function bajaUsuario($id,$nombreUsuario){
 /**Fin bajaUsuario() */
 
 /**Función crearProducto($nombre,$stock,$precioCompra,$precioVenta,$categoria) */
-function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria){
+function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,$nombreImagen){
     $db = conexion();
     //comprovar que existe la categoría del producto o crear una nueva
     $db->beginTransaction();
@@ -380,7 +380,7 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria)
         return $error;
     }
     //creción del nuevo producto
-    $insert = "INSERT INTO productos (nombre, stock, precio_compra, precio_venta, categoria_id, creado) VALUES ('$nombre', $stock, $precioCompra, $precioVenta, $categoria, NOW()) ";
+    $insert = "INSERT INTO productos (nombre, stock, precio_compra, precio_venta, categoria_id, imagen, creado) VALUES ('$nombre', $stock, $precioCompra, $precioVenta, $categoria,'$nombreImagen', NOW()) ";
     $result = $db->query($insert);
     if(!$result){
         $db->rollBack();
