@@ -1,0 +1,16 @@
+body{
+    background-color: rgba(123, 200, 251, 0.879);
+}
+#contenido{
+    height:max-content;
+}
+#logo{
+    width: 20em;
+    height:auto;
+}
+.imgProducto{
+    width: 4em;
+}
+.imgProducto:hover{
+    width:10em;
+}

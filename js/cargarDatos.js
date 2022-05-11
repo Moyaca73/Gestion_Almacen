@@ -155,6 +155,7 @@ $(document).on('click', '#altaProducto', function(e){
    });
 //Baja producto
 $(document).on('click', '#bajaProducto', function(e){
+    document.getElementById('bajaProductoEstado').style.display="none";
     document.getElementById('productosVenta').style.display="none";
     document.getElementById('ventaEstado').style.display="none";
     document.getElementById('ventas').style.display="none";
@@ -188,6 +189,25 @@ $(document).on('click', '#compraProducto', function(e){
     document.getElementById('compraProductoEstado').style.display="none";
     document.getElementById('tablaCompra').style.display="block";
     mostrarProductosCompra();
+});
+//Mostar compras productos
+$(document).on('click', '#moastarComprasProducto', function(e){
+    document.getElementById('productosVenta').style.display="none";
+    document.getElementById('ventaEstado').style.display="none";
+    document.getElementById('ventas').style.display="none";
+    document.getElementById('ventaEliminada').style.display="none";
+    document.getElementById('tablaInformeVentas').style.display="none";
+    document.getElementById('cabeceraInforme').style.display="none";
+    document.getElementById('informeVentas').style.display="none";
+    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
+    document.getElementById('listaUsuarios').style.display="none";
+    document.getElementById('formularioAltaNuevoProducto').style.display="none";
+    document.getElementById('bajaProductos').style.display="none";
+    document.getElementById('compraProductos').style.display="none";
+    document.getElementById('compraProductoEstado').style.display="none";
+    document.getElementById('tablaCompra').style.display="none";
+    document.getElementById('tablaComprasRealizadas').style.display="block";
+    mostrarCompras();
 });
 
 
@@ -279,7 +299,7 @@ function mostrarProductosVenta(){
         url: "../backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
-            console.log(response);
+            $('#formularioVenta').trigger('reset');
             let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -288,7 +308,7 @@ function mostrarProductosVenta(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
-                    <td><img class="img-fluid" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_venta}</td>
                     <td>${producto.nombre_categoria}</td>
@@ -306,7 +326,94 @@ function mostrarProductosVenta(){
                     </td>
                     </tr>
                 `
+                document.getElementById('lista_productos').style.display="block";
                  $('#tablaVenta').html(fila);
+               
+            });
+            $(document).on('click','.btn_venta', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                let id = $(this).attr('productoId');
+                let cantidad = parseInt($('#cantidad'+id).val());
+                let precio_venta = $('#precio_venta'+id).val();
+                let stock = parseInt($('#stock'+id).val());
+                if(stock < cantidad){
+                    alert(`Solo dispones del ${stock} unidades`);
+                    
+                }else if(cantidad == 0){
+                    alert('Debes introducir una cantidad mayor que cero');
+                }else{
+                     procesarVenta(id,cantidad,precio_venta);
+                    }
+                
+                
+            })
+           
+        }
+    });
+    //cuadro de búsquedas
+    $("#productoBuscar").keyup(function (e) { 
+        if($('#productoBuscar').val()){
+            let busqueda = $('#productoBuscar').val();
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                let productos = JSON.parse(response);
+                let cuadro = '';
+                productos.forEach(producto =>{
+                    cuadro += `<li>
+                    ${producto.nombre}
+                    </li>`
+                });
+                $('.busquedas').html(cuadro);
+            }
+        });
+    }
+    });
+    $(document).on('click','#btn_buscar', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        document.getElementById('lista_productos').style.display="none";
+        let busqueda = $('#productoBuscar').val();
+        console.log(busqueda);
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                console.log(response);
+                let productos = JSON.parse(response);
+            let fila ='';
+            productos.forEach(producto => {
+                let id = producto.id;
+                fila += `
+                    <tr>
+                    <td>${producto.id}</td>
+                    <td>${producto.nombre}</td>
+                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td>${producto.stock}</td>
+                    <td>${producto.precio_venta}</td>
+                    <td>${producto.nombre_categoria}</td>
+                    <td>
+                        <div class="input-group">
+                        <input type="hidden" id="precio_venta${id}" value="${producto.precio_venta}">
+                        <input type="hidden" id="stock${id}" value="${producto.stock}">
+                        <label>CANTIDAD  </label>
+                        <input id="cantidad${id}" type="number" name="cantidad"
+                        class="form-control" min="0" value="0" required >
+                        <span class="input-group-btn ">
+                            <input  class="btn btn-success btn_venta" type="button " value="Venta" productoId="${id}">
+                         </span>
+                        </div>
+                    </td>
+                    </tr>`
+
+                document.getElementById('lista_productos').style.display="block";
+                 $('#tablaVenta').html(fila);
+                 $('.busquedas').html('');
+                 $('#formularioVenta').trigger('reset');
                
             });
             $(document).on('click','.btn_venta', function(e){
@@ -330,10 +437,11 @@ function mostrarProductosVenta(){
                 
                 
             })
-           
-      
-        }
+                
+            }
+        });
     });
+
 }
 /**Fin mostrarProductosVenta() */
 
@@ -588,6 +696,7 @@ function informeVentas(ventas,mensage){
 /******************Funciones del administrador*********** */
 /**Función  altaNuevoUsuario()*/
 function altaNuevoUsuario(){
+    document.getElementById('usuarioCrear').innerHTML="Introduce los datos del nuevo usuario";
     $('#nuevoUsuario').submit(function (e){
         let nombre = $('#nombre').val();
         let nombreUsuario = $('#nombreUsuario').val();
@@ -600,7 +709,9 @@ function altaNuevoUsuario(){
             data: {nombre, nombreUsuario, clave, rol, status},
             success: function (response) {
                 console.log(response);
+                document.getElementById('usuarioCrear').style.display="block";
                 document.getElementById('usuarioCrear').innerHTML=response;
+                $('#nuevoUsuario').trigger('reset');
                             
             }
         });
@@ -725,6 +836,7 @@ function mostrarProductosBaja(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
+                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_compra}</td>
                     <td>${producto.precio_venta}</td>
@@ -738,10 +850,11 @@ function mostrarProductosBaja(){
                     </td>
                     </tr>
                 `
+                document.getElementById('listaProductosBaja').style.display="block";
                  $('#tablaBaja').html(fila);
                
             });
-            $(document).on('click','.btn_baja', function(e){
+           /* $(document).on('click','.btn_baja', function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 let id = $(this).attr('productoId');
@@ -756,10 +869,95 @@ function mostrarProductosBaja(){
                }
                 
                                        
-            });
+            });*/
            
       
         }
+    });
+     //cuadro de búsquedas
+     $("#productoBuscarBaja").keyup(function (e) { 
+        if($('#productoBuscarBaja').val()){
+            let busqueda = $('#productoBuscarBaja').val();
+        
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                let productos = JSON.parse(response);
+                let cuadro = '';
+                productos.forEach(producto =>{
+                    cuadro += `<li>
+                    ${producto.nombre}
+                    </li>`
+                });
+                $('.busquedas').html(cuadro);
+            }
+        });
+    }
+    });
+    $(document).on('click','#btn_buscarBaja', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        document.getElementById('listaProductosBaja').style.display="none";
+        let busqueda = $('#productoBuscarBaja').val();
+        console.log(busqueda);
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                console.log(response);
+                let productos = JSON.parse(response);
+            let fila ='';
+            productos.forEach(producto => {
+                let id = producto.id;
+                let nombre = producto.nombre;
+                fila += `
+                    <tr>
+                    <td>${producto.id}</td>
+                    <td>${producto.nombre}</td>
+                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td>${producto.stock}</td>
+                    <td>${producto.precio_compra}</td>
+                    <td>${producto.precio_venta}</td>
+                    <td>${producto.nombre_categoria}</td>
+                    <td>
+                        <div class="input-group">
+                        <span class="input-group-btn ">
+                            <input  class="btn btn-danger btn_baja" type="button " value="Baja" productoId="${id}" productoNombre="${nombre}">
+                         </span>
+                        </div>
+                    </td>
+                    </tr>
+                `
+                document.getElementById('listaProductosBaja').style.display="block";
+                 $('#tablaBaja').html(fila);
+                 $('.busquedas').html('');
+                 $('#formularioBaja').trigger('reset');
+               
+               
+            });
+            $(document).on('click','.btn_baja', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                let id = $(this).attr('productoId');
+                let nombre = $(this).attr('productoNombre');
+                alert(`Estás apunto de borrar el producto: ${nombre}`);
+               if( confirm('Comfirmación de borrado del producto: ' + nombre)){
+                console.log(id + nombre);
+                bajaProducto(id,nombre);
+               }else{
+                document.getElementById('bajaProductoEstado').style.display="block";
+                document.getElementById('bajaProductoEstado').innerHTML = `El producto id= ${id} nombre: ${nombre} no ha sido eliminado.`
+                mostrarProductosBaja();
+               }
+                
+                                       
+            });
+                
+            }
+        });
     });
 }
 
@@ -852,6 +1050,82 @@ function mostrarProductosCompra(){
       
         }
     });
+    //cuadro de búsquedas
+    $("#productoBuscarCompra").keyup(function (e) { 
+        if($('#productoBuscarCompra').val()){
+            let busqueda = $('#productoBuscarCompra').val();
+        
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                let productos = JSON.parse(response);
+                let cuadro = '';
+                productos.forEach(producto =>{
+                    cuadro += `<li>
+                    ${producto.nombre}
+                    </li>`
+                });
+                $('.busquedas').html(cuadro);
+            }
+        });
+    }
+    });
+    $(document).on('click','#btn_buscarCompra', function(e){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        document.getElementById('listaProductosBaja').style.display="none";
+        let busqueda = $('#productoBuscarCompra').val();
+        console.log(busqueda);
+        $.ajax({
+            type: "post",
+            url: "../backend/buscarProductos.php",
+            data: { busqueda },
+            success: function (response) {
+                console.log(response);
+                let productos = JSON.parse(response);
+            let fila ='';
+            productos.forEach(producto => {
+                let id = producto.id;
+                let nombre = producto.nombre;
+                fila += `
+                <tr>
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>${producto.nombre_categoria}</td>
+                <td>${producto.stock}</td>
+                <td><div class="input-group">
+                <input id="precioCompra${id}" type="number" step="0.01" value="${producto.precio_compra}" min="0.01">
+            </div></td>
+                <td><div class="input-group">
+                <input id="precioVenta${id}" type="number" step="0.01" value="${producto.precio_venta}" min="0.01">
+            </div></td>
+                <td>
+                    <div class="input-group">
+                    <label>CANTIDAD  </label>
+                    <input id="cantidad${id}" type="number" name="cantidad"
+                    class="form-control" min="0" value="0" required >
+                    <span class="input-group-btn ">
+                        <input  class="btn btn-success btn_compra" type="button " value="Comprar" productoId="${id}" stock="${producto.stock}">
+                     </span>
+                    </div>
+                </td>
+                </tr>
+            
+                `
+                document.getElementById('tablaCompra').style.display="block";
+                 $('#tablaCompraBody').html(fila);
+                 $('.busquedas').html('');
+                 $('#formularioCompra').trigger('reset');
+               
+            });
+            
+                
+            }
+        });
+    });
+
 }
 /**Fin Función mostarProductosCompra() */
 /**Función   procesarCompra(id,cantidad,precioCompra,precioVenta)*/
@@ -877,26 +1151,36 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
         }
     
     });
-
+    
+    
 }
 /**Fin Función procesarCompra() */
 /**Función mostrarCompras(compra) */
-function mostrarCompras(compra){
-    let fila = '';
-    compra.forEach(producto => {
-        fila += `
-        <tr>
-            <td>${producto.id}</td>
-            <td>${producto.producto_id}</td>
-            <td>${producto.unidades}</td>
-            <td>${producto.precio_compra}</td>
-            <td>${producto.precio_venta}</td>
-            <td>${producto.total}</td>
-            <td>${producto.fecha}</td>
-        </tr>
-        `
-        $('#tablaComprasRelizadasBody').html(fila);
+function mostrarCompras(){
+    $.ajax({
+        type: "GET",
+        url: "../backend/mostrarCompras.php",
+        success: function (response) {
+            let compras = JSON.parse(response);
+            let fila = '';
+            compras.forEach(producto => {
+                fila += `
+                <tr>
+                    <td>${producto.idVenta}</td>
+                    <td>${producto.nombre}</td>
+                    <td>${producto.unidades}</td>
+                    <td>${producto.precio_compra}</td>
+                    <td>${producto.precio_venta}</td>
+                    <td>${producto.total}</td>
+                    <td>${producto.fecha}</td>
+                </tr>
+                `
+                $('#tablaComprasRelizadasBody').html(fila);
+            });
+            
+        }
     });
+   
     
 }
 /**Fin Función mostrarCompras(compra) */

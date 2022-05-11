@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <title>Home</title>
@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!--CSS-->
+  <link rel="stylesheet" href="./css/stilos.css">
 
 </head>
 
@@ -19,8 +21,13 @@
     <!--Cabecera-->
     <header id="header">
       <div class="row">
-        <div class="col-6 col-lg-3 text-center border rounded">Inventario</div>
-        <div id="fecha" class="col-6 col-lg-9 text-end border rounded">
+        <div class="col-3 col-lg-4">
+
+        </div>
+        <div class="col-6 col-lg-4 text-center">
+          <img id="logo" src="./imagenLogo/logo_large.png" alt="logo">
+        </div>
+        <div id="fecha" class="col-6 col-lg-4 text-end ">
         </div>
       </div>
 
@@ -92,6 +99,7 @@
                   <li><a id="altaProducto" class="dropdown-item" href="#">Alta nuevo producto</a></li>
                   <li><a id="bajaProducto" class="dropdown-item" href="#">Baja producto</a></li>
                   <li><a id="compraProducto" class="dropdown-item" href="#">Comprar producto</a></li>
+                  <li><a id="moastarComprasProducto" class="dropdown-item" href="#">Mostrar todas las compras realizadas</a></li>
                 </ul>
               </div>
             </li>
@@ -112,21 +120,32 @@
         <div class="jumbotron text-center" id="contenido">
           <!---------------Formulario login---------------------->
           <div id="login">
-            <h1>Acceso Usuarios</h1>
-            <form method="post" onsubmit="return login()" class="clearfix">
-              <div class="form-group">
-                <label for="usuario" class="control-label">Usuario</label>
-                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario" value="Admin">
+            <div class="row">
+              <div class="col">
               </div>
-              <div class="form-group">
-                <label for="clave" class="control-label">Contraseña</label>
-                <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña"
-                  value="admin" required>
+              <div class="col">
+                <h1>Acceso Usuarios</h1>
+                <form method="post" onsubmit="return login()" class="clearfix">
+                  <div class="form-group">
+                    <label for="usuario" class="control-label">Usuario</label>
+                    <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario"
+                      value="Admin">
+                  </div>
+                  <div class="form-group">
+                    <label for="clave" class="control-label">Contraseña</label>
+                    <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña"
+                      value="admin" required>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-info  pull-right">Acceso</button>
+                  </div>
+                </form>
               </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-info  pull-right">Acceso</button>
+              <div class="col">
+
               </div>
-            </form>
+            </div>
+
           </div>
           <!--Fin formulario login-->
           <!----Gestión de ventas---->
@@ -135,17 +154,31 @@
             <h1>Nueva Venta</h1>
             <form id="formularioVenta">
               <div class="form-goup">
-                <label for="producto">Producto:</label>
+                <label for="productoBuscar">Producto:</label>
                 <input type="text" placeholder="Producto" name="productoBuscar" id="productoBuscar">
+                <button type="submit" class="btn btn-primary" id="btn_buscar">Buscar</button>
               </div>
-              <div id="lista_productos" class="table-responsive table-bordered">
+              <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                  <div class="card">
+                    <div class="card my-4 ">
+                      <div class="card-body">
+                        <ul class="busquedas"></ul>
+                      </div>
+                    </div>
 
+                  </div>
+
+                </div>
+                <div class="col"></div>
               </div>
 
             </form>
+
             <div class="row">
               <div class="col">
-                <table class="table table-dark">
+                <table id="lista_productos" class="table table-dark">
                   <tr>
                     <th>ID</th>
                     <th>NOMBRE</th>
@@ -212,6 +245,9 @@
             <H1 id="cabeceraInforme"></H1>
             <div class="row">
               <div class="col">
+
+              </div>
+              <div class="col">
                 <table id="tablaInformeVentas" class="table  table-bordered table-hover table-active">
                   <tr>
                     <th>ID</th>
@@ -228,6 +264,9 @@
                     <td id="totalVentas"></td>
                   </tr>
                 </table>
+              </div>
+              <div class="col">
+
               </div>
             </div>
           </div>
@@ -256,7 +295,12 @@
               <div class="row">
                 <div class="col-6">
                   <label for="rol">Rol</label>
-                  <input class="form-control" type="number" min="1" max="3" id="rol" required>
+                  <select class="form-select" id="rol"
+                  aria-label="Default select example">
+                    <option selected>selecciona</option>
+                    <option value="1">Administrador</option>
+                    <option value="3">Usuario</option>
+                  </select>
                 </div>
                 <div class="col-6">
                   <label for="status">Status</label>
@@ -305,13 +349,15 @@
                 </div>
                 <div class="col-4">
                   <label for="precioCompra">Precio de compra</label>
-                  <input class="form-control" type="number" min="0" step="0.01" id="precioCompra" name="precioCompra" required>
+                  <input class="form-control" type="number" min="0" step="0.01" id="precioCompra" name="precioCompra"
+                    required>
                 </div>
               </div>
               <div class="row">
                 <div class="col-4">
                   <label for="precioVenta">Precio de venta</label>
-                  <input class="form-control" type="number" min="0" step="0.01" id="precioVenta" name="precioVenta" required>
+                  <input class="form-control" type="number" min="0" step="0.01" id="precioVenta" name="precioVenta"
+                    required>
                 </div>
                 <div class="col-4">
                   <label for="categoria">Categoría</label>
@@ -334,90 +380,125 @@
               <div class="form-goup">
                 <label for="producto">Producto:</label>
                 <input type="text" placeholder="Producto" name="productoBuscar" id="productoBuscarBaja">
+                <button type="submit" class="btn btn-primary" id="btn_buscarBaja">Buscar</button>
               </div>
-              <div id="listaProductosBaja" class="table-responsive table-bordered">
+              <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                  <div class="card">
+                    <div class="card my-4 ">
+                      <div class="card-body">
+                        <ul class="busquedas"></ul>
+                      </div>
+                    </div>
 
+                  </div>
+
+                </div>
+                <div class="col"></div>
               </div>
+
 
             </form>
-            <div class="row">
-              <div class="col">
-                <table class="table table-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th>STOCK</th>
-                    <th>PRECIO COMPRA</th>
-                    <th>PRECIO VENTA</th>
-                    <th>CATEGORIA</th>
-                    <th>BAJA PRODUCTO</th>
-                  </tr>
-                  <tbody id="tablaBaja">
+            <div id="listaProductosBaja" class="table-responsive table-bordered">
+              <div class="row">
+                <div class="col">
+                  <table class="table table-dark">
+                    <tr>
+                      <th>ID</th>
+                      <th>NOMBRE</th>
+                      <th>IMAGEN</th>
+                      <th>STOCK</th>
+                      <th>PRECIO COMPRA</th>
+                      <th>PRECIO VENTA</th>
+                      <th>CATEGORIA</th>
+                      <th>BAJA PRODUCTO</th>
+                    </tr>
+                    <tbody id="tablaBaja">
 
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!--Fin Baja productos-->
-          <!--Comprar productos-->
-          <div id="compraProductos" style="display: none;">
-            <h1>COMPRA PRODUCTOS</h1>
-            <h2 id="compraProductoEstado" style="display: none;"></h2>
-            <form id="formularioCompra">
-              <div class="form-goup">
-                <label for="producto">Producto:</label>
-                <input type="text" placeholder="Producto" name="productoBuscar" id="productoBuscarCompra">
-              </div>
-            </form>
-            <div id="tablaCompra" class="row">
-              <div class="col">
-                <table class="table table-dark">
-                  <tr>
-                    <th>ID</th>
-                    <th>NOMBRE</th>
-                    <th>CATEGORIA</th>
-                    <th>STOCK</th>
-                    <th>PRECIO COMPRA</th>
-                    <th>PRECIO VENTA</th>
-                    <th>COMPRAR PRODUCTO</th>
-                  </tr>
-                  <tbody id="tablaCompraBody">
-
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <!--Fin Comprar productos-->
-        <!--Mostar compras-->
-        <div id="tablaComprasRealizadas" style="display: none;">
-          <div class="row">
+        <!--Fin Baja productos-->
+        <!--Comprar productos-->
+        <div id="compraProductos" style="display: none;">
+          <h1 class="text-center">COMPRA PRODUCTOS</h1>
+          <h2 id="compraProductoEstado" style="display: none;"></h2>
+          <form id="formularioCompra">
+            <div class="form-goup text-center">
+              <label for="producto">Producto:</label>
+              <input type="text" placeholder="Producto" name="productoBuscar" id="productoBuscarCompra">
+              <button type="submit" class="btn btn-primary" id="btn_buscarCompra">Buscar</button>
+            </div>
+            <div class="row">
+              <div class="col"></div>
+              <div class="col">
+                <div class="card">
+                  <div class="card my-4">
+                    <div class="card-body">
+                      <ul class="busquedas"></ul>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="col"></div>
+            </div>
+          </form>
+          <div id="tablaCompra" class="row">
             <div class="col">
               <table class="table table-dark">
                 <tr>
                   <th>ID</th>
-                  <th>PRODUCTO</th>
-                  <th>UNIDADES</th>
-                  <th>PRECIO DE COMPRA</th>
-                  <th>PRECIO DE VENTA</th>
-                  <th>TOTAL</th>
-                  <th>FECHA</th>
+                  <th>NOMBRE</th>
+                  <th>CATEGORIA</th>
+                  <th>STOCK</th>
+                  <th>PRECIO COMPRA</th>
+                  <th>PRECIO VENTA</th>
+                  <th>COMPRAR PRODUCTO</th>
                 </tr>
-                <tbody id="tablaComprasRelizadasBody">
+                <tbody id="tablaCompraBody">
 
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-        <!--Fin Mostar compras-->
-        <!-----Fin Gestión de productos--------->
-        <!------------Fin Gestiones del administrador--------------->
-
       </div>
+      <!--Fin Comprar productos-->
+      <!--Mostar compras-->
+      <div id="tablaComprasRealizadas" style="display: none;">
+        <div class="row">
+          <div class="col text-center">
+            <H1>TODAS LAS COMPRAS</H1>
+            <table class="table table-dark">
+              <tr>
+                <th>ID</th>
+                <th>PRODUCTO</th>
+                <th>UNIDADES</th>
+                <th>PRECIO DE COMPRA</th>
+                <th>PRECIO DE VENTA</th>
+                <th>TOTAL</th>
+                <th>FECHA</th>
+              </tr>
+              <tbody id="tablaComprasRelizadasBody">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--Fin Mostar compras-->
+      <!-----Fin Gestión de productos--------->
+      <!------------Fin Gestiones del administrador--------------->
+
     </div>
+  </div>
   </div>
   <!--Fin Contenido-->
   <!--Pié de página-->

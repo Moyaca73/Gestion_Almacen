@@ -83,7 +83,7 @@ function nuevoAcceso($nombre_usuario){
 function cargarProductos(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
-    $select = "SELECT p.id, p.nombre, p.precio_compra, p.precio_venta, p.stock, p.imagen, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id";
+    $select = "SELECT p.id, p.estado, p.nombre, p.precio_compra, p.precio_venta, p.stock, p.imagen, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id and p.estado = 1";
 
     $result= $db->query($select);
     if($result->rowCount()>=1){
@@ -221,8 +221,7 @@ $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\conf
 /**Función ventasTodas() */
 function ventasTodas(){
     //conexión
-$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-$db=new PDO($res[0],$res[1],$res[2]);
+$db=conexion();
 //consulta
 $select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id";
 
@@ -347,7 +346,7 @@ function bajaUsuario($id,$nombreUsuario){
 /**Función crearProducto($nombre,$stock,$precioCompra,$precioVenta,$categoria) */
 function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,$nombreImagen){
     $db = conexion();
-    //comprovar que existe la categoría del producto o crear una nueva
+    //comprobar que existe la categoría del producto o crear una nueva
     $db->beginTransaction();
     $select = "SELECT id FROM categorias WHERE nombre_categoria = '$categoria'";
     $result = $db->query($select);
@@ -372,15 +371,31 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
  }
     
     // comprobar que no existe ya el producto
-    $select = "SELECT nombre FROM productos WHERE nombre ='$nombre'";
+    $select = "SELECT nombre, estado FROM productos WHERE nombre ='$nombre'";
     $result = $db->query($select);
     if($result->rowCount() == 1){
-        $db->rollBack();
-        $error = "El ya existe un producto con el nombre: $nombre";
-        return $error;
-    }
-    //creción del nuevo producto
-    $insert = "INSERT INTO productos (nombre, stock, precio_compra, precio_venta, categoria_id, imagen, creado) VALUES ('$nombre', $stock, $precioCompra, $precioVenta, $categoria,'$nombreImagen', NOW()) ";
+        foreach ($result as $producto){
+            $estado = $producto['estado'];
+        }
+        //existe el producto y está activo
+        if($estado == 1){
+            $db->rollBack();
+            $error = "El ya existe un producto con el nombre: $nombre";
+            return $error;
+        //existe el producto y no está activo. En este caso lo activamos
+        }else{
+            $update = "UPDATE productos SET estado = 1 WHERE nombre ='$nombre'";
+            $result = $db->query($update);
+            $db->commit();
+            $nuevoProducto = "El producto $nombre está listo para su venta";
+            return $nuevoProducto;
+
+        }
+
+    
+}
+    //creación del nuevo producto
+    $insert = "INSERT INTO productos (nombre, estado, stock, precio_compra, precio_venta, categoria_id, imagen, creado) VALUES ('$nombre', 1, $stock, $precioCompra, $precioVenta, $categoria,'$nombreImagen', NOW()) ";
     $result = $db->query($insert);
     if(!$result){
         $db->rollBack();
@@ -409,8 +424,8 @@ function mostrarProducto($nombre){
 /**Función bajaProducto($id) */
 function bajaProducto($id){
     $db = conexion();
-    $delete = "DELETE FROM productos WHERE id = $id";
-    $result = $db->query($delete);
+    $update = "UPDATE productos SET estado = 0 WHERE id = $id";
+    $result = $db->query($update);
     if($result->rowCount() == 1){
         return true;
     }else{
@@ -455,5 +470,39 @@ if($result->rowCount() == 1){
 }
 
 /**Fin mostrarUltimaCompra() */
+/**Función mostrarComprasTodas() */
+function mosrtarComprasTodas(){
+    //conexión
+$db=conexion();
+//consulta
+$select = "SELECT p.nombre, p.id, c.idCompra, c.unidades, c.precio_compra, c.precio_venta, c.fecha, c.total FROM compras AS c join productos AS p WHERE  p.id = c.producto_id";
+
+$result = $db->query($select);
+
+if($result->rowCount() > 0){
+    return $result;
+
+}else {
+    return FALSE;
+}
+
+
+}
+/**Fin ventasTodas() */
+/**Función busqueda($busqueda) */
+function busqueda($busqueda){
+    $db=conexion();
+    $select = "SELECT * FROM productos WHERE nombre LIKE '$busqueda%' and estado = 1";
+    $result = $db->query($select);
+    if(!$result){
+        die('Query Error');
+        return false;
+    }else{
+        return $result;
+    }
+
+    
+}
+/**Fin Función busqueda($busqueda) */
 
 
