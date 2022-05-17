@@ -33,8 +33,7 @@ function conexion(){
 /**Función comprobar usuario */
 function comprobar_usuario($nombre_usuario,$clave){
 
-$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-$db=new PDO($res[0],$res[1],$res[2]);
+$db=conexion();
 $select = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
 
 $result= $db->query($select);
@@ -97,11 +96,10 @@ function cargarProductos(){
 /*función venta($producto,$unidades)*/
 function venta($producto, $unidades){
     //conexión
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
+   $db=conexion();
     //comienzo de la transacción
     $db->beginTransaction();
-    //comproBar el stock 
+    //comprobar el stock 
     $select = "SELECT stock, precio_venta, id  FROM productos WHERE id = '$producto'";
 
     $result = $db->query($select);
@@ -152,9 +150,7 @@ function venta($producto, $unidades){
 
 /**Función mostrarUltimaVenta() */
 function mostrarUltimaVenta(){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
-
+    $db=conexion();
     $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
 
     $result = $db->query($select);
@@ -172,8 +168,7 @@ function mostrarUltimaVenta(){
 /**Función anularVenta($id,$cantidad) */
 function anularVenta($idVenta,$cantidad,$producto){
     //conexión
-$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
+    $db=conexion();
     //inicio de la transacción
     $db->beginTransaction();
     //borrar la venta de la base de datos
@@ -240,8 +235,7 @@ if($result->rowCount() > 0){
 /**Función  mostrarVentasDia(fecha) */
 function  mostrarVentasDia($fecha){
     //conexión
-$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-$db=new PDO($res[0],$res[1],$res[2]);
+$db=conexion();
 //consulta
 $select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) = '$fecha' AND  p.id = v.producto_id ";
 
@@ -262,8 +256,7 @@ if($result->rowCount() > 0){
 /**Función  mostrarVentasPeriodo(fecha) */
 function  mostrarVentasPeriodo($desde,$hasta){
     //conexión
-$res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-$db=new PDO($res[0],$res[1],$res[2]);
+$db=conexion();
 //consulta
 $select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) >= '$desde' AND DATE(v.fecha) <= '$hasta' AND  p.id = v.producto_id ";
 
@@ -287,7 +280,7 @@ function crearUsuario($nombre,$nombreUsuario,$clave,$rol,$status){
     $db = conexion();
     //transacción
     $db->beginTransaction();
-    //comprovar si ya existe el nombre de usuario 
+    //comprobar si ya existe el nombre de usuario 
     $select = "SELECT nombre_usuario FROM usuarios WHERE nombre_usuario = '$nombreUsuario'";
     $result = $db->query($select);
     if($result->rowCount() == 1){
@@ -350,13 +343,14 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
     $db->beginTransaction();
     $select = "SELECT id FROM categorias WHERE nombre_categoria = '$categoria'";
     $result = $db->query($select);
-    if($result->rowCount() == 1){
+    if($result->rowCount() == 1){//existe la categoría
         foreach($result as $id){
             $categoria = $id['id'];
         }  
-    }else if($result->rowCount() == 0){
+    }else if($result->rowCount() == 0){//no existe la categoria y creamos la nueva categoría
         $insert = "INSERT INTO categorias(nombre_categoria) VALUES ('$categoria')";
         $result = $db->query($insert);
+        //comprobamos que la categoría se ha creado
         $select = "SELECT id FROM categorias WHERE nombre_categoria = '$categoria'";
     $result = $db->query($select);
     if($result->rowCount() == 1){
@@ -460,7 +454,7 @@ function procesarCompra($producto,$unidades,$precioVenta,$precioCompra,$stock){
 /**Función mostrarUltimaCompra() */
 function mostrarUltimaCompra(){
     $db = conexion();
-$select = "SELECT * FROM compras WHERE id = (SELECT MAX(id) FROM compras)";
+$select = "SELECT p.nombre, c.idCompra, c.unidades, c.precio_compra, c.precio_venta, c.fecha, c.total FROM compras AS c join productos AS p WHERE  p.id = c.producto_id AND idCompra = (SELECT MAX(idCompra) FROM compras)";
 $result = $db->query($select);
 if($result->rowCount() == 1){
     return $result;
@@ -475,7 +469,7 @@ function mosrtarComprasTodas(){
     //conexión
 $db=conexion();
 //consulta
-$select = "SELECT p.nombre, p.id, c.idCompra, c.unidades, c.precio_compra, c.precio_venta, c.fecha, c.total FROM compras AS c join productos AS p WHERE  p.id = c.producto_id";
+$select = "SELECT p.nombre, p.id, c.idCompra, c.unidades, c.precio_compra, c.precio_venta, c.fecha, c.total FROM compras AS c join productos AS p  WHERE  p.id = c.producto_id ORDER BY c.fecha DESC";
 
 $result = $db->query($select);
 
@@ -489,8 +483,8 @@ if($result->rowCount() > 0){
 
 }
 /**Fin ventasTodas() */
-/**Función busqueda($busqueda) */
-function busqueda($busqueda){
+/**Función busquedaProductos($busqueda) */
+function busquedaProductos($busqueda){
     $db=conexion();
     $select = "SELECT * FROM productos WHERE nombre LIKE '$busqueda%' and estado = 1";
     $result = $db->query($select);
@@ -503,6 +497,6 @@ function busqueda($busqueda){
 
     
 }
-/**Fin Función busqueda($busqueda) */
+/**Fin Función busquedaProductos($busqueda) */
 
 

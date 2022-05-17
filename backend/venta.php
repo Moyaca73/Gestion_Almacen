@@ -13,4 +13,5 @@
        echo 'error en la venta';
        
     }
+    return false;
 ?>

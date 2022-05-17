@@ -1,36 +1,17 @@
 /***************Aplicación*********** */
-//fecha y hora del acceso
-console.log(fecha());
-document.getElementById("fecha").innerHTML = fecha() +'  '+ hora();
+
 //*gestión de ventas*/
 
 //nueva venta
 $(document).on('click', '#nuevaVenta', function(e){
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
+    limpiarPagina();
     document.getElementById('productosVenta').style.display="block";
-    document.getElementById('bajaProductos').style.display="none";
     mostrarProductosVenta();
 })
 //eliminar venta
 $(document).on('click', '#eliminarVenta', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
+    limpiarPagina();
     document.getElementById('ventas').style.display="block";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
     todasLasVentas();
     
 })
@@ -38,16 +19,7 @@ $(document).on('click', '#eliminarVenta', function(e){
 //**Informe de ventas */
 //Última venta
 $(document).on('click', '#ultimaVenta', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('informeVentas').style.display="block";
     informeUltimaVenta();
     
@@ -56,16 +28,7 @@ $(document).on('click', '#ultimaVenta', function(e){
 
 //Ventas del día
 $(document).on('click', '#ventasDia', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('informeVentas').style.display="block";
     informeVentasDia(fechaBusquedas());
     
@@ -74,18 +37,7 @@ $(document).on('click', '#ventasDia', function(e){
 //fin ventas del día
 //Ventas del periodo
 $(document).on('click', '#ventasPeriodo', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('informeVentas').style.display="block";
     informeVentasPeriodo();
     
@@ -100,18 +52,7 @@ $(document).on('click', '#ventasPeriodo', function(e){
 /***************Gestión de Usuarios******************* */
 //Alta nuevo usuario
 $(document).on('click', '#altaNuevoUsuario', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('formularioAltaNuevoUsuario').style.display="block";
     altaNuevoUsuario();
     
@@ -119,18 +60,7 @@ $(document).on('click', '#altaNuevoUsuario', function(e){
 
 //Baja usuarios
 $(document).on('click', '#bajaUsuario', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('listaUsuarios').style.display="block";
     mostrarUsuarios();
 });
@@ -138,60 +68,41 @@ $(document).on('click', '#bajaUsuario', function(e){
 /***************Gestión de Productos********************* */
 //Alta nuevo producto
 $(document).on('click', '#altaProducto', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('formularioAltaNuevoProducto').style.display="block";
     altaProducto();
    });
 //Baja producto
 $(document).on('click', '#bajaProducto', function(e){
-    document.getElementById('bajaProductoEstado').style.display="none";
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('compraProductos').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
+    limpiarPagina();
     document.getElementById('bajaProductos').style.display="block";
     mostrarProductosBaja();
 });
 //Compra producto
 $(document).on('click', '#compraProducto', function(e){
-    document.getElementById('productosVenta').style.display="none";
-    document.getElementById('ventaEstado').style.display="none";
-    document.getElementById('ventas').style.display="none";
-    document.getElementById('ventaEliminada').style.display="none";
-    document.getElementById('tablaInformeVentas').style.display="none";
-    document.getElementById('cabeceraInforme').style.display="none";
-    document.getElementById('informeVentas').style.display="none";
-    document.getElementById('formularioAltaNuevoUsuario').style.display="none";
-    document.getElementById('listaUsuarios').style.display="none";
-    document.getElementById('formularioAltaNuevoProducto').style.display="none";
-    document.getElementById('bajaProductos').style.display="none";
+    limpiarPagina();
     document.getElementById('compraProductos').style.display="block";
-    document.getElementById('tablaComprasRealizadas').style.display="none";
-    document.getElementById('compraProductoEstado').style.display="none";
-    document.getElementById('tablaCompra').style.display="block";
     mostrarProductosCompra();
 });
 //Mostar compras productos
 $(document).on('click', '#moastarComprasProducto', function(e){
+    limpiarPagina();
+    document.getElementById('tablaComprasRealizadas').style.display="block";
+    mostrarComprasTodas();
+});
+
+
+/***************Fin Gestión de Productos********************* */
+/**************Fin Acciones del Administrador************** */
+
+
+
+
+/*****************Fin Aplicación********* */
+
+
+/**Función limpiarPagina() */
+function limpiarPagina(){
     document.getElementById('productosVenta').style.display="none";
     document.getElementById('ventaEstado').style.display="none";
     document.getElementById('ventas').style.display="none";
@@ -206,20 +117,11 @@ $(document).on('click', '#moastarComprasProducto', function(e){
     document.getElementById('compraProductos').style.display="none";
     document.getElementById('compraProductoEstado').style.display="none";
     document.getElementById('tablaCompra').style.display="none";
-    document.getElementById('tablaComprasRealizadas').style.display="block";
-    mostrarCompras();
-});
-
-
-/***************Fin Gestión de Productos********************* */
-/**************Fin Acciones del Administrador************** */
-
-
-
-
-/*****************Fin Aplicación********* */
-
-/**Funciones para solicitar datos al sevidor */
+    document.getElementById('tablaComprasRealizadas').style.display="none";
+    document.getElementById('bajaProductoEstado').style.display="none";
+    
+}
+/**Fin Función limpiarPagina() */
 /**Función fechaBusquedas() 
  * Esta función es para obtener la fecha en el formato 
  * requerido para las búsquedas en la base de datos
@@ -261,8 +163,22 @@ function hora(){
 }
      function checkTime(i)
      {if (i<10) {i="0" + i;}return i;}
+
+     /**Fúnción validarJson(json) 
+ * esta función comprueba si el parámetro que se le pasa es un Json (true) o no (false)
+ * https://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
+*/
+function validarJson(json) {
+    try {
+        JSON.parse(json);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+/**FIN Fúnción validarJson()**/
      
-    
+    /**Funciones para solicitar datos al sevidor */
 
 /**Función cargarUsuario() */
 function cargarUsuario(){
@@ -270,9 +186,11 @@ function cargarUsuario(){
     //llamada asíncrona
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
-            console.log(this.response);
-            //los datos llegaron
+                     //los datos llegaron
             let usuario = JSON.parse(this.responseText);
+            //fecha y hora del acceso
+            let nombre = usuario[0]['nombre'];
+            document.getElementById("fecha").innerHTML =`${nombre}Acceso: ${fecha()}  ${hora()}`;
             
             if(usuario[0]['rol'] == 3){
                 //mostrar nav usuario
@@ -295,7 +213,7 @@ function cargarUsuario(){
 /**Función mostrarProductosVenta() */
 function mostrarProductosVenta(){
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
@@ -377,13 +295,13 @@ function mostrarProductosVenta(){
         e.stopImmediatePropagation();
         document.getElementById('lista_productos').style.display="none";
         let busqueda = $('#productoBuscar').val();
-        console.log(busqueda);
+     
         $.ajax({
             type: "post",
             url: "../backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
-                console.log(response);
+                
                 let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -423,9 +341,7 @@ function mostrarProductosVenta(){
                 let cantidad = parseInt($('#cantidad'+id).val());
                 let precio_venta = $('#precio_venta'+id).val();
                 let stock = parseInt($('#stock'+id).val());
-                // console.log(`cantidad:${cantidad}`);
-                // console.log(precio_venta);
-                // console.log(stock);
+               
                 if(stock < cantidad){
                     alert(`Solo dispones del ${stock} unidades`);
                     
@@ -453,11 +369,11 @@ function procesarVenta(producto,unidades,precio_venta){
         url: "../backend/venta.php",
         data: {producto,unidades,precio_venta},
         success: function (response) {
-            console.log(response);
             document.getElementById('productosVenta').style.display="none";
             document.getElementById('ventas').style.display="block";
             document.getElementById('ventaEstado').style.display="block";
             if(validarJson(response)){
+
                 let venta = JSON.parse(response);
             mostarVentas(venta);
             document.getElementById('ventaEstado').innerHTML='La venta ha sido realizada correctamente';
@@ -508,9 +424,6 @@ function mostarVentas(ventas){
         let idVenta = $(this).attr('ventaId');
         let cantidad = parseInt($('#cantidad'+idVenta).val());
         let producto = $('#nombreProducto'+idVenta).val();
-        console.log(idVenta);
-        console.log(cantidad);
-        console.log(producto);
         alert("Está a punto de eliminar la venta: " + idVenta);
         if(confirm("Eliminar la venta "+ idVenta)){
         anularVenta(idVenta,cantidad,producto);
@@ -533,7 +446,7 @@ function anularVenta(idVenta,cantidad,producto){
         url: "../backend/anularVenta.php",
         data: {idVenta,cantidad,producto},
         success: function (response) {
-            console.log(response);
+
             document.getElementById('ventas').style.display="none";
             document.getElementById('eliminarVenta').style.display="block";
             document.getElementById('ventaEliminada').innerHTML=response;
@@ -547,7 +460,7 @@ function anularVenta(idVenta,cantidad,producto){
 /**Función todasLasVentas() */
 function todasLasVentas(){
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/ventas.php",
        //cuando recibe la respuesta
         success: function (response) {
@@ -558,19 +471,20 @@ function todasLasVentas(){
 
 }
 /**Fin todasLasVentas() */
+
 /**Función informeUltimaVenta() */
 function informeUltimaVenta(){
     document.getElementById('formularioPeriodo').style.display="none";
     document.getElementById('cabeceraInforme').style.display="block";
-    let mensage = 'Última venta';
+    let mensaje = 'Última venta';
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/ultimaVenta.php",
        //cuando recibe la respuesta
         success: function (response) {
             if (validarJson(response)){
                 let ventas = JSON.parse(response);
-                informeVentas(ventas,mensage);
+                informeVentas(ventas,mensaje);
                 }else{
                     document.getElementById('cabeceraInforme').innerHTML = response;
                     document.getElementById('informeVentas').style.display="none";
@@ -584,16 +498,16 @@ function informeUltimaVenta(){
 function informeVentasDia(fecha){
     document.getElementById('formularioPeriodo').style.display="none";
     document.getElementById('cabeceraInforme').style.display="block";
-    let mensage = 'Ventas del día';
+    let mensaje = 'Ventas del día';
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/ventasDia.php",
         data: {fecha},
        //cuando recibe la respuesta
         success: function (response) {
             if (validarJson(response)){
             let ventas = JSON.parse(response);
-            informeVentas(ventas,mensage);
+            informeVentas(ventas,mensaje);
             }else{
                 document.getElementById('cabeceraInforme').innerHTML = response;
                 document.getElementById('tablaInformeVentas').style.display="none";
@@ -610,8 +524,8 @@ function informeVentasDia(fecha){
 function informeVentasPeriodo(){
     document.getElementById('formularioPeriodo').style.display="block";
     document.getElementById('cabeceraInforme').style.display="block";
-    let mensage = 'Ventas del periodo';
-    document.getElementById('cabeceraInforme').innerHTML = mensage;
+    let mensaje = 'Ventas del periodo';
+    document.getElementById('cabeceraInforme').innerHTML = mensaje;
     $('#hasta').val(fechaBusquedas());//ponemos la fecha actual por defecto
    $('#informeVentas').submit(function (e) { 
            let desde = $('#desde').val();
@@ -619,18 +533,16 @@ function informeVentasPeriodo(){
            if(desde > hasta){
                alert('La fecha de inicio debe se anterior a la fecha de fin');
            }else{
-             mensage = 'Ventas del periodo desde ' + desde + ' hasta ' + hasta;
-           console.log(desde);
-           console.log(hasta);
+             mensaje = 'Ventas del periodo desde ' + desde + ' hasta ' + hasta;
            $.ajax({
                type: "post",
                url: "../backend/ventasPeriodo.php",
                data: {desde,hasta},
                success: function (response) {
-                   console.log(response);
+
                    if (validarJson(response)){
                     let ventas = JSON.parse(response);
-                    informeVentas(ventas,mensage);
+                    informeVentas(ventas,mensaje);
                     }else{
                         document.getElementById('cabeceraInforme').innerHTML = response;
                         document.getElementById('tablaInformeVentas').style.display="none";
@@ -650,25 +562,13 @@ function informeVentasPeriodo(){
 
 /**Fin informeVentasPeriodo() */
 
-/**Fúnción validarJson(json) 
- * esta función comprueba si el parámetro que se le pasa es un Json (true) o no (false)
- * https://stackoverflow.com/questions/8431415/json-object-validation-in-javascript
-*/
-function validarJson(json) {
-    try {
-        JSON.parse(json);
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-/**FIN Fúnción validarJson()**/
+
 
 /*Función informeVentas(ventas)*/
-function informeVentas(ventas,mensage){
+function informeVentas(ventas,mensaje){
     let totalVentas = 0;
     let fila = '';
-    document.getElementById('cabeceraInforme').innerHTML = mensage;
+    document.getElementById('cabeceraInforme').innerHTML = mensaje;
     document.getElementById('tablaInformeVentas').style.display="block";
 
     ventas.forEach(producto => {
@@ -708,7 +608,6 @@ function altaNuevoUsuario(){
             url: "../backend/altaNuevoUsuario.php",
             data: {nombre, nombreUsuario, clave, rol, status},
             success: function (response) {
-                console.log(response);
                 document.getElementById('usuarioCrear').style.display="block";
                 document.getElementById('usuarioCrear').innerHTML=response;
                 $('#nuevoUsuario').trigger('reset');
@@ -791,6 +690,7 @@ function bajaUsuario(id,nombreUsuario){
 
 /**Función altaProducto() */
 function altaProducto(){
+    document.getElementById('productoCrear').style.display="none";
     $('#nuevoProducto').submit(function (e){
         e.preventDefault();
         let nombre = $('#nombreProducto').val();
@@ -810,6 +710,7 @@ function altaProducto(){
             processData: false,
             success: function (response) {
                 $("#nuevoProducto")[0].reset();
+                document.getElementById('productoCrear').style.display="block";
                 document.getElementById('productoCrear').innerHTML=response;
                             
             }
@@ -822,7 +723,7 @@ function altaProducto(){
 /**Función mostrarProductosBaja() */
 function mostrarProductosBaja(){
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
@@ -854,22 +755,6 @@ function mostrarProductosBaja(){
                  $('#tablaBaja').html(fila);
                
             });
-           /* $(document).on('click','.btn_baja', function(e){
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                let id = $(this).attr('productoId');
-                let nombre = $(this).attr('productoNombre');
-                alert(`Estás apunto de borrar el producto: ${nombre}`);
-               if( confirm('Comfirmación de borrado del producto: ' + nombre)){
-                bajaProducto(id,nombre);
-               }else{
-                document.getElementById('bajaProductoEstado').style.display="block";
-                document.getElementById('bajaProductoEstado').innerHTML = `El producto id= ${id} nombre: ${nombre} no ha sido eliminado.`
-                mostrarProductosBaja();
-               }
-                
-                                       
-            });*/
            
       
         }
@@ -901,13 +786,13 @@ function mostrarProductosBaja(){
         e.stopImmediatePropagation();
         document.getElementById('listaProductosBaja').style.display="none";
         let busqueda = $('#productoBuscarBaja').val();
-        console.log(busqueda);
+       
         $.ajax({
             type: "post",
             url: "../backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
-                console.log(response);
+                
                 let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -941,11 +826,12 @@ function mostrarProductosBaja(){
             $(document).on('click','.btn_baja', function(e){
                 e.preventDefault();
                 e.stopImmediatePropagation();
+                
                 let id = $(this).attr('productoId');
                 let nombre = $(this).attr('productoNombre');
                 alert(`Estás apunto de borrar el producto: ${nombre}`);
                if( confirm('Comfirmación de borrado del producto: ' + nombre)){
-                console.log(id + nombre);
+              
                 bajaProducto(id,nombre);
                }else{
                 document.getElementById('bajaProductoEstado').style.display="block";
@@ -986,11 +872,12 @@ function bajaProducto(id, nombre){
 /**Función mostarProductosCompra() */
 function mostrarProductosCompra(){
     $.ajax({
-        type: "Get",
+        type: "GET",
         url: "../backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
-            
+            console.log(response);
+            document.getElementById('tablaCompra').style.display="block";
             let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -1020,6 +907,7 @@ function mostrarProductosCompra(){
                     </tr>
                 `
                  $('#tablaCompraBody').html(fila);
+                 document.getElementById('tablaCompraBody').display='block';
                
             });
             $(document).on('click','.btn_compra', function(e){
@@ -1030,10 +918,7 @@ function mostrarProductosCompra(){
                 let precioVenta = $('#precioVenta'+id).val();
                 let precioCompra = $('#precioCompra'+id).val();
                 let stock = cantidad + parseInt($(this).attr('stock')); 
-                 console.log(`cantidad:${cantidad}`);
-                 console.log(precioVenta);
-                 console.log(precioCompra);
-                 console.log(stock);
+               
                 if(precioCompra <= 0){
                     alert('comprobar el precio de compra');
                 }else if(precioVenta <= 0){
@@ -1077,13 +962,11 @@ function mostrarProductosCompra(){
         e.stopImmediatePropagation();
         document.getElementById('listaProductosBaja').style.display="none";
         let busqueda = $('#productoBuscarCompra').val();
-        console.log(busqueda);
         $.ajax({
             type: "post",
             url: "../backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
-                console.log(response);
                 let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -1135,12 +1018,12 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
         url: "../backend/compra.php",
         data: {producto,unidades,precioCompra,precioVenta,stock},
         success: function (response) {
-            console.log(response);
+           
             document.getElementById('compraProductos').style.display="block";
             document.getElementById('compraProductoEstado').style.display="block";
             if(validarJson(response)){
                 let compra = JSON.parse(response);
-            mostrarCompras(compra);
+            mostrarCompra(compra);
             document.getElementById('tablaCompra').style.display="none";
             document.getElementById('tablaComprasRealizadas').style.display="block";
             document.getElementById('compraProductoEstado').innerHTML='La compra ha sido realizada correctamente';
@@ -1155,8 +1038,34 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
     
 }
 /**Fin Función procesarCompra() */
-/**Función mostrarCompras(compra) */
-function mostrarCompras(){
+/**Función mostrarCompra(compra) */
+function mostrarCompra(compra){
+ 
+            console.log(compra);
+            let fila = '';
+            compra.forEach(producto => {
+                fila += `
+                <tr>
+                    <td>${producto.idCompra}</td>
+                    <td>${producto.nombre}</td>
+                    <td>${producto.unidades}</td>
+                    <td>${producto.precio_compra}</td>
+                    <td>${producto.precio_venta}</td>
+                    <td>${producto.total}</td>
+                    <td>${producto.fecha}</td>
+                </tr>
+                `
+                $('#tablaComprasRelizadasBody').html(fila);
+            });
+            
+        }
+  
+   
+    
+
+/**Fin Función mostrarCompra(compra) */
+/**Función mostrarComprasTodas() */
+function mostrarComprasTodas(){
     $.ajax({
         type: "GET",
         url: "../backend/mostrarCompras.php",
@@ -1166,7 +1075,7 @@ function mostrarCompras(){
             compras.forEach(producto => {
                 fila += `
                 <tr>
-                    <td>${producto.idVenta}</td>
+                    <td>${producto.idCompra}</td>
                     <td>${producto.nombre}</td>
                     <td>${producto.unidades}</td>
                     <td>${producto.precio_compra}</td>
@@ -1183,7 +1092,9 @@ function mostrarCompras(){
    
     
 }
-/**Fin Función mostrarCompras(compra) */
+/**Fin Función mostrarComprasTodas() */
+
+
 /******************Fin Funciones del administrador*********** */
 
 

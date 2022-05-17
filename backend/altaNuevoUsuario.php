@@ -9,6 +9,6 @@
       $nuevoUsuario = crearUsuario($nombre,$nombreUsuario,$clave,$rol,$status);
       echo $nuevoUsuario;
     }else{
-      echo "No se ha podido crear el usuario. Error en el envó de datos ";
+      echo "No se ha podido crear el usuario. Error en el envío de datos ";
     }
 ?>

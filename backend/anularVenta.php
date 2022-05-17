@@ -8,6 +8,6 @@
         $anulacion = anularVenta($id,$cantidad,$producto);
         echo $anulacion; 
       }
-    
+    return false;
     
 ?>

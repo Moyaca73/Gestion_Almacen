@@ -7,8 +7,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         echo $usuarios_json;
         }else
         echo 'error al mostar los usuarios';
-    }
+    }else{
     
-
+    echo 'error al mostar los usuarios';
+    }
 
 ?>
