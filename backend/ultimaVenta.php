@@ -10,7 +10,3 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
        
     }
     return false;
-    
-
-
-?>

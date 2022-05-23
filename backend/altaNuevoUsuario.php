@@ -11,4 +11,3 @@
     }else{
       echo "No se ha podido crear el usuario. Error en el envío de datos ";
     }
-?>

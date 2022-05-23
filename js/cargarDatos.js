@@ -204,7 +204,7 @@ function cargarUsuario(){
         }
     }
     //petición al servidor
-    xhttp.open("GET","../backend/usuario.php",true);
+    xhttp.open("GET","backend/usuario.php",true);
     xhttp.send();
     return false;
     
@@ -214,7 +214,7 @@ function cargarUsuario(){
 function mostrarProductosVenta(){
     $.ajax({
         type: "GET",
-        url: "../backend/productos.php",
+        url: "backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
             $('#formularioVenta').trigger('reset');
@@ -226,7 +226,7 @@ function mostrarProductosVenta(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
-                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td><img class="img-fluid imgProducto" src="imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_venta}</td>
                     <td>${producto.nombre_categoria}</td>
@@ -275,7 +275,7 @@ function mostrarProductosVenta(){
             let busqueda = $('#productoBuscar').val();
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 let productos = JSON.parse(response);
@@ -298,7 +298,7 @@ function mostrarProductosVenta(){
      
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 
@@ -310,7 +310,7 @@ function mostrarProductosVenta(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
-                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td><img class="img-fluid imgProducto" src="imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_venta}</td>
                     <td>${producto.nombre_categoria}</td>
@@ -366,7 +366,7 @@ function procesarVenta(producto,unidades,precio_venta){
     
     $.ajax({
         type: "POST",
-        url: "../backend/venta.php",
+        url: "backend/venta.php",
         data: {producto,unidades,precio_venta},
         success: function (response) {
             document.getElementById('productosVenta').style.display="none";
@@ -391,6 +391,7 @@ function procesarVenta(producto,unidades,precio_venta){
 
 /**Función mostrarVentas(ventas)*/
 function mostarVentas(ventas){
+    console.log(ventas);
     let fila = '';
     ventas.forEach(producto => {
         let idVenta = producto.idVenta;
@@ -400,6 +401,7 @@ function mostarVentas(ventas){
             <tr>
             <td>${producto.idVenta}</td>
             <td>${producto.fecha}</td>
+            <td>${producto.hora}</td>
             <td>${producto.nombre}</td>
             <td>${producto.cantidad}</td>
             <td>${producto.precio}</td>
@@ -443,7 +445,7 @@ function mostarVentas(ventas){
 function anularVenta(idVenta,cantidad,producto){
     $.ajax({
         type: "POST",
-        url: "../backend/anularVenta.php",
+        url: "backend/anularVenta.php",
         data: {idVenta,cantidad,producto},
         success: function (response) {
 
@@ -461,7 +463,7 @@ function anularVenta(idVenta,cantidad,producto){
 function todasLasVentas(){
     $.ajax({
         type: "GET",
-        url: "../backend/ventas.php",
+        url: "backend/ventas.php",
        //cuando recibe la respuesta
         success: function (response) {
             let ventas = JSON.parse(response);
@@ -479,7 +481,7 @@ function informeUltimaVenta(){
     let mensaje = 'Última venta';
     $.ajax({
         type: "GET",
-        url: "../backend/ultimaVenta.php",
+        url: "backend/ultimaVenta.php",
        //cuando recibe la respuesta
         success: function (response) {
             if (validarJson(response)){
@@ -501,7 +503,7 @@ function informeVentasDia(fecha){
     let mensaje = 'Ventas del día';
     $.ajax({
         type: "GET",
-        url: "../backend/ventasDia.php",
+        url: "backend/ventasDia.php",
         data: {fecha},
        //cuando recibe la respuesta
         success: function (response) {
@@ -536,7 +538,7 @@ function informeVentasPeriodo(){
              mensaje = 'Ventas del periodo desde ' + desde + ' hasta ' + hasta;
            $.ajax({
                type: "post",
-               url: "../backend/ventasPeriodo.php",
+               url: "backend/ventasPeriodo.php",
                data: {desde,hasta},
                success: function (response) {
 
@@ -605,7 +607,7 @@ function altaNuevoUsuario(){
         let status = $('#status').val();
         $.ajax({
             type: "post",
-            url: "../backend/altaNuevoUsuario.php",
+            url: "backend/altaNuevoUsuario.php",
             data: {nombre, nombreUsuario, clave, rol, status},
             success: function (response) {
                 document.getElementById('usuarioCrear').style.display="block";
@@ -623,7 +625,7 @@ function altaNuevoUsuario(){
 function mostrarUsuarios(){
     $.ajax({
         type: "get",
-        url: "../backend/mostrarUsuarios.php",
+        url: "backend/mostrarUsuarios.php",
         success: function (response) {
             let usuarios = JSON.parse(response);
             let fila = '';
@@ -672,7 +674,7 @@ function bajaUsuario(id,nombreUsuario){
     document.getElementById('bajaEstado').innerHTML='';
     $.ajax({
         type: "post",
-        url: "../backend/bajaUsuario.php",
+        url: "backend/bajaUsuario.php",
         data: {id,nombreUsuario},
         success: function (response) {
             if(response == 1){
@@ -703,7 +705,7 @@ function altaProducto(){
 
         $.ajax({
             type: "post",
-            url: "../backend/altaNuevoProducto.php",
+            url: "backend/altaNuevoProducto.php",
             data: new FormData(this),
             contentType:"json",
             contentType: false,
@@ -724,7 +726,7 @@ function altaProducto(){
 function mostrarProductosBaja(){
     $.ajax({
         type: "GET",
-        url: "../backend/productos.php",
+        url: "backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
             
@@ -737,7 +739,7 @@ function mostrarProductosBaja(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
-                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td><img class="img-fluid imgProducto" src="imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_compra}</td>
                     <td>${producto.precio_venta}</td>
@@ -766,7 +768,7 @@ function mostrarProductosBaja(){
         
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 let productos = JSON.parse(response);
@@ -789,7 +791,7 @@ function mostrarProductosBaja(){
        
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 
@@ -802,7 +804,7 @@ function mostrarProductosBaja(){
                     <tr>
                     <td>${producto.id}</td>
                     <td>${producto.nombre}</td>
-                    <td><img class="img-fluid imgProducto" src="../imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
+                    <td><img class="img-fluid imgProducto" src="imagenes/${producto.imagen}" alt="${producto.imagen}"></td>
                     <td>${producto.stock}</td>
                     <td>${producto.precio_compra}</td>
                     <td>${producto.precio_venta}</td>
@@ -852,7 +854,7 @@ function mostrarProductosBaja(){
 function bajaProducto(id, nombre){
     $.ajax({
         type: "post",
-        url: "../backend/bajaProducto.php",
+        url: "backend/bajaProducto.php",
         data: {id, nombre},
         success: function (response) {
             if(response == true){
@@ -873,7 +875,7 @@ function bajaProducto(id, nombre){
 function mostrarProductosCompra(){
     $.ajax({
         type: "GET",
-        url: "../backend/productos.php",
+        url: "backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
             console.log(response);
@@ -922,7 +924,7 @@ function mostrarProductosCompra(){
                 if(precioCompra <= 0){
                     alert('comprobar el precio de compra');
                 }else if(precioVenta <= 0){
-                    alert('Revisar el precio de venta')
+                    alert('Revisar el precio de venta');
                 }else if(cantidad == 0){
                     alert('Debes introducir una cantidad mayor que cero');
                 }else{
@@ -942,7 +944,7 @@ function mostrarProductosCompra(){
         
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 let productos = JSON.parse(response);
@@ -964,7 +966,7 @@ function mostrarProductosCompra(){
         let busqueda = $('#productoBuscarCompra').val();
         $.ajax({
             type: "post",
-            url: "../backend/buscarProductos.php",
+            url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
                 let productos = JSON.parse(response);
@@ -1015,7 +1017,7 @@ function mostrarProductosCompra(){
 function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
     $.ajax({
         type: "POST",
-        url: "../backend/compra.php",
+        url: "backend/compra.php",
         data: {producto,unidades,precioCompra,precioVenta,stock},
         success: function (response) {
            
@@ -1025,6 +1027,7 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
                 let compra = JSON.parse(response);
             mostrarCompra(compra);
             document.getElementById('tablaCompra').style.display="none";
+            document.getElementById('formularioCompra').style.display="none";
             document.getElementById('tablaComprasRealizadas').style.display="block";
             document.getElementById('compraProductoEstado').innerHTML='La compra ha sido realizada correctamente';
 
@@ -1068,7 +1071,7 @@ function mostrarCompra(compra){
 function mostrarComprasTodas(){
     $.ajax({
         type: "GET",
-        url: "../backend/mostrarCompras.php",
+        url: "backend/mostrarCompras.php",
         success: function (response) {
             let compras = JSON.parse(response);
             let fila = '';

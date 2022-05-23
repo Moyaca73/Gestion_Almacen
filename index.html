@@ -100,7 +100,8 @@
                   <li><a id="altaProducto" class="dropdown-item" href="#">Alta nuevo producto</a></li>
                   <li><a id="bajaProducto" class="dropdown-item" href="#">Baja producto</a></li>
                   <li><a id="compraProducto" class="dropdown-item" href="#">Comprar producto</a></li>
-                  <li><a id="moastarComprasProducto" class="dropdown-item" href="#">Mostrar todas las compras realizadas</a></li>
+                  <li><a id="moastarComprasProducto" class="dropdown-item" href="#">Mostrar todas las compras
+                      realizadas</a></li>
                 </ul>
               </div>
             </li>
@@ -180,7 +181,7 @@
             <div id="lista_productos" class="table-responsive table-bordered">
               <div class="row">
                 <div class="col">
-                  <table  class="table table-dark">
+                  <table class="table table-dark">
                     <tr>
                       <th>ID</th>
                       <th>NOMBRE</th>
@@ -191,7 +192,7 @@
                       <th>NUEVA VENTA</th>
                     </tr>
                     <tbody id="tablaVenta">
-  
+
                     </tbody>
                   </table>
                 </div>
@@ -207,6 +208,7 @@
                 <tr>
                   <th>ID</th>
                   <th>FECHA</th>
+                  <th>HORA</th>
                   <th>NOMBRE</th>
                   <th>CANTIDAD</th>
                   <th>PRECIO</th>
@@ -302,8 +304,7 @@
               <div class="row">
                 <div class="col-6">
                   <label for="rol">Rol</label>
-                  <select class="form-select" id="rol"
-                  aria-label="Default select example">
+                  <select class="form-select" id="rol" aria-label="Default select example">
                     <option selected>selecciona</option>
                     <option value="1">Administrador</option>
                     <option value="3">Usuario</option>
@@ -434,7 +435,7 @@
         <!--Comprar productos-->
         <div id="compraProductos" style="display: none;">
           <h1 class="text-center">COMPRA PRODUCTOS</h1>
-          <h2 id="compraProductoEstado" style="display: none;"></h2>
+          <h2 id="compraProductoEstado" class="text-center" style="display: none;"></h2>
           <form id="formularioCompra">
             <div class="form-goup text-center">
               <label for="producto">Producto:</label>

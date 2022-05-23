@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-05-2022 a las 17:45:56
--- Versión del servidor: 10.4.21-MariaDB
--- Versión de PHP: 8.0.10
+-- Tiempo de generación: 22-05-2022 a las 20:28:13
+-- Versión del servidor: 10.4.24-MariaDB
+-- Versión de PHP: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,10 +38,13 @@ CREATE TABLE `categorias` (
 
 INSERT INTO `categorias` (`id`, `nombre_categoria`) VALUES
 (18, 'asientos'),
+(21, 'carroceria'),
 (17, 'direcion'),
 (13, 'Filtros'),
 (12, 'frenos'),
+(22, 'latiguillos'),
 (19, 'llantas'),
+(23, 'manguitos'),
 (2, 'prueba'),
 (1, 'Repuestos'),
 (3, 'Ruedas'),
@@ -69,17 +72,10 @@ CREATE TABLE `compras` (
 --
 
 INSERT INTO `compras` (`idCompra`, `producto_id`, `unidades`, `precio_compra`, `precio_venta`, `total`, `fecha`) VALUES
-(1, 1, 5, 5, 10, 25, '2022-05-02'),
 (2, 5, 100, 15, 20, 1500, '2022-05-02'),
-(3, 1, 8, 5, 10, 40, '2022-05-02'),
 (4, 7, 10, 22, 33, 220, '2022-05-02'),
 (5, 7, 8, 22, 33, 176, '2022-05-02'),
 (6, 23, 2, 80.32, 130.25, 160.64, '2022-05-02'),
-(7, 1, 2, 5, 10, 10, '2022-05-02'),
-(8, 1, 5, 5, 10, 25, '2022-05-02'),
-(9, 1, 5, 5, 10, 25, '2022-05-02'),
-(10, 1, 5, 5, 10, 25, '2022-05-02'),
-(11, 1, 6, 5, 10, 30, '2022-05-02'),
 (12, 5, 6, 15, 20, 90, '2022-05-02'),
 (13, 7, 5, 22, 33, 110, '2022-05-02'),
 (14, 7, 2, 22, 33, 44, '2022-05-02'),
@@ -94,7 +90,9 @@ INSERT INTO `compras` (`idCompra`, `producto_id`, `unidades`, `precio_compra`, `
 (23, 34, 1, 25, 45.5, 25, '2022-05-14'),
 (24, 35, 1, 185, 250, 185, '2022-05-14'),
 (25, 34, 1, 25, 45.5, 25, '2022-05-14'),
-(26, 34, 2, 25, 45.5, 50, '2022-05-17');
+(26, 34, 2, 25, 45.5, 50, '2022-05-17'),
+(29, 36, 4, 5, 25, 20, '2022-05-22'),
+(30, 39, 8, 22, 44, 176, '2022-05-22');
 
 -- --------------------------------------------------------
 
@@ -140,18 +138,21 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `estado`, `nombre`, `stock`, `precio_compra`, `precio_venta`, `categoria_id`, `imagen`, `creado`) VALUES
-(1, 0, 'Filtro de gasolina', 31, '5.00', '10.00', 2, NULL, '2017-06-16 07:03:16'),
 (5, 0, 'rueda', 115, '15.00', '20.00', 3, NULL, '2022-03-03 15:23:37'),
 (7, 0, 'Pastillas', 25, '22.00', '33.00', 12, NULL, '2022-04-27 21:25:13'),
 (23, 0, 'llanta', 52, '80.32', '130.25', 3, NULL, '2022-04-29 18:30:59'),
 (24, 0, 'Neumatio lluvia', 30, '55.00', '88.00', 3, NULL, '2022-05-04 20:57:03'),
 (29, 0, 'bicicleta', 1, '0.01', '0.04', 12, 'bicicleta.jpg', '2022-05-06 17:31:44'),
-(30, 0, 'caca', 4, '0.02', '0.04', 12, 'caca.jpg', '2022-05-06 18:06:29'),
+(30, 0, 'caca', 23, '0.02', '0.04', 12, 'caca.jpg', '2022-05-06 18:06:29'),
 (31, 0, 'manillar', 78, '25.00', '60.00', 17, 'manillar.jpg', '2022-05-10 20:51:11'),
 (32, 0, 'volante', 8, '44.00', '66.00', 17, 'volante.jpg', '2022-05-10 21:29:52'),
 (33, 0, 'filtro gasolina', 8, '55.00', '65.00', 13, 'filtro gasolina.jpg', '2022-05-11 16:31:34'),
-(34, 1, 'Funda asientos', 30, '25.00', '45.50', 18, 'Funda asientos.jpg', '2022-05-13 21:30:17'),
-(35, 1, 'Llanta aluminio', 22, '185.00', '250.00', 19, 'Llanta aluminio.jpg', '2022-05-14 17:27:29');
+(34, 1, 'Funda asientos', 29, '25.00', '45.50', 18, 'Funda asientos.jpg', '2022-05-13 21:30:17'),
+(35, 1, 'Llanta aluminio', 22, '185.00', '250.00', 19, 'Llanta aluminio.jpg', '2022-05-14 17:27:29'),
+(36, 1, 'aleta', 4, '5.00', '25.00', 21, 'aleta.jpg', '2022-05-20 18:17:36'),
+(39, 1, 'Latiguillo de frenos', 8, '22.00', '44.00', 12, 'Latiguillo de frenos.jpg', '2022-05-20 18:35:50'),
+(40, 0, 'Pastillas de freno', 0, '22.00', '45.00', 12, 'Pastillas de freno.jpg', '2022-05-20 18:39:11'),
+(42, 1, 'manguito radiador', 1, '50.00', '70.00', 23, 'manguito radiador.jpg', '2022-05-20 21:54:12');
 
 -- --------------------------------------------------------
 
@@ -174,8 +175,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `nombre_usuario`, `clave`, `rol`, `status`, `ultimo_acceso`) VALUES
-(1, 'Admin Admin', 'Admin', 'admin', 1, 1, '2022-05-17 16:28:12'),
-(11, 'Antonio', 'Antonio', 'antonio', 3, 1, '2022-05-13 21:16:35'),
+(1, 'Admin Admin', 'Admin', 'admin', 1, 1, '2022-05-22 19:40:00'),
+(11, 'Antonio', 'Antonio', 'antonio', 3, 1, '2022-05-19 20:57:36'),
 (27, 'Carlos', 'carlos', '1234', 1, 1, NULL),
 (30, 'Eufrasio', 'calavera', '1234', 3, 1, NULL);
 
@@ -187,6 +188,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `nombre_usuario`, `clave`, `rol`, `statu
 
 CREATE TABLE `ventas` (
   `idVenta` int(11) UNSIGNED NOT NULL,
+  `id_vendedor` int(11) UNSIGNED NOT NULL,
   `producto_id` int(11) UNSIGNED NOT NULL,
   `cantidad` int(11) NOT NULL,
   `precio` decimal(25,2) NOT NULL,
@@ -197,18 +199,17 @@ CREATE TABLE `ventas` (
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`idVenta`, `producto_id`, `cantidad`, `precio`, `fecha`) VALUES
-(257, 5, 1, '20.00', '2022-04-30 19:23:39'),
-(260, 30, 19, '0.04', '2022-05-09 22:59:34'),
-(261, 1, 4, '10.00', '2022-05-10 18:41:34'),
-(262, 5, 40, '20.00', '2022-05-10 20:58:17'),
-(263, 32, 2, '66.00', '2022-05-11 15:47:35'),
-(265, 1, 1, '10.00', '2022-05-11 16:55:02'),
-(269, 34, 3, '45.50', '2022-05-14 18:47:21'),
-(270, 35, 2, '250.00', '2022-05-14 18:47:35'),
-(272, 34, 1, '45.50', '2022-05-16 18:23:27'),
-(273, 34, 1, '45.50', '2022-05-16 18:54:36'),
-(274, 35, 8, '250.00', '2022-05-17 10:30:21');
+INSERT INTO `ventas` (`idVenta`, `id_vendedor`, `producto_id`, `cantidad`, `precio`, `fecha`) VALUES
+(257, 0, 5, 1, '20.00', '2022-04-30 19:23:39'),
+(262, 0, 5, 40, '20.00', '2022-05-10 20:58:17'),
+(263, 0, 32, 2, '66.00', '2022-05-11 15:47:35'),
+(269, 0, 34, 3, '45.50', '2022-05-14 18:47:21'),
+(270, 0, 35, 2, '250.00', '2022-05-14 18:47:35'),
+(272, 0, 34, 1, '45.50', '2022-05-16 18:23:27'),
+(273, 0, 34, 1, '45.50', '2022-05-16 18:54:36'),
+(274, 0, 35, 8, '250.00', '2022-05-17 10:30:21'),
+(278, 0, 42, 1, '70.00', '2022-05-22 18:56:52'),
+(280, 0, 34, 1, '45.50', '2022-05-22 19:35:33');
 
 --
 -- Índices para tablas volcadas
@@ -266,13 +267,13 @@ ALTER TABLE `ventas`
 -- AUTO_INCREMENT de la tabla `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `compras`
 --
 ALTER TABLE `compras`
-  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `idCompra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT de la tabla `grupos_usuarios`
@@ -284,19 +285,19 @@ ALTER TABLE `grupos_usuarios`
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `idVenta` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=275;
+  MODIFY `idVenta` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
 
 --
 -- Restricciones para tablas volcadas

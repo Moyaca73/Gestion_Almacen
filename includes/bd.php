@@ -48,8 +48,7 @@ return $result->fetch();
 }
 /**función cargar_usuario(nombre_usuario,clave) */
 function cargar_usuario($nombre_usuario,$clave){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
+    $db = conexion();
     $select = "SELECT * FROM usuarios WHERE nombre_usuario ='".$nombre_usuario."' and clave = '".$clave."'";
 
     $result= $db->query($select);
@@ -65,8 +64,7 @@ function cargar_usuario($nombre_usuario,$clave){
 }
 /*Función nuevoAcceso(id)*/
 function nuevoAcceso($nombre_usuario){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
+   $db=conexion();
     $query = "UPDATE usuarios SET ultimo_acceso = now() Where nombre_usuario = '$nombre_usuario'";
 
     $result= $db->query($query);
@@ -80,8 +78,7 @@ function nuevoAcceso($nombre_usuario){
 
 /**Función cargarProductos() */
 function cargarProductos(){
-    $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
-    $db=new PDO($res[0],$res[1],$res[2]);
+   $db = conexion();
     $select = "SELECT p.id, p.estado, p.nombre, p.precio_compra, p.precio_venta, p.stock, p.imagen, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.categoria_id = c.id and p.estado = 1";
 
     $result= $db->query($select);
@@ -151,7 +148,7 @@ function venta($producto, $unidades){
 /**Función mostrarUltimaVenta() */
 function mostrarUltimaVenta(){
     $db=conexion();
-    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
+    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
 
     $result = $db->query($select);
 
@@ -218,7 +215,7 @@ function ventasTodas(){
     //conexión
 $db=conexion();
 //consulta
-$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id";
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora  FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id ORDER BY v.fecha DESC";
 
 $result = $db->query($select);
 
@@ -337,7 +334,7 @@ function bajaUsuario($id,$nombreUsuario){
 /**Fin bajaUsuario() */
 
 /**Función crearProducto($nombre,$stock,$precioCompra,$precioVenta,$categoria) */
-function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,$nombreImagen){
+function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria, $nombreImagen){
     $db = conexion();
     //comprobar que existe la categoría del producto o crear una nueva
     $db->beginTransaction();
@@ -380,6 +377,44 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
         }else{
             $update = "UPDATE productos SET estado = 1 WHERE nombre ='$nombre'";
             $result = $db->query($update);
+            if(!$result){
+                $db->rollBack();
+                $error = "No se ha podido crear el nuevo producto activar";
+                return $error;
+            }
+         //aumentamos el estock con el nuevo stock
+            $update = "UPDATE productos SET stock =(SELECT stock From productos WHERE nombre = '$nombre') + 100 WHERE nombre = '$nombre'";
+            $result = $db->query($update);
+            if(!$result){
+                $db->rollBack();
+                $error = "No se ha podido crear el nuevo producto stock";
+                return $error;
+            }
+        //modificamos el precio de compra con el nuevo precio de compra
+            $update = "UPDATE productos SET precio_compra = $precioCompra WHERE nombre ='$nombre'";
+            $result = $db->query($update);
+            if(!$result){
+                $db->rollBack();
+                $error = "No se ha podido crear el nuevo producto p.compra";
+                return $error;
+            }
+        //modificamos el precio de venta con el nuevo precio de venta
+            $update = "UPDATE productos SET precio_venta = $precioVenta WHERE nombre ='$nombre'";
+            $result = $db->query($update);
+            if(!$result){
+                $db->rollBack();
+                $error = "No se ha podido crear el nuevo producto p.venta";
+                return $error;
+            }
+        //registramos la compra del producto
+            $total = $precioCompra * $stock;
+            $insert = "INSERT INTO compras (producto_id,unidades,precio_compra,precio_venta,total,fecha) VALUES ((SELECT id FROM productos WHERE nombre = '$nombre') ,$stock ,$precioCompra,$precioVenta,$total,now())";
+            $result = $db->query($insert);
+            if(!$result){
+                $db->rollBack();
+                $error = "No se ha podido crear el nuevo producto fallo en el registro de la compra";
+                return $error;
+            }
             $db->commit();
             $nuevoProducto = "El producto $nombre está listo para su venta";
             return $nuevoProducto;

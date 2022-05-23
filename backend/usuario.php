@@ -9,4 +9,3 @@ session_start();
  echo $usuario_json;
  }else
 echo 'error al cargar el usuario';
-?>

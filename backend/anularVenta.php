@@ -9,5 +9,3 @@
         echo $anulacion; 
       }
     return false;
-    
-?>

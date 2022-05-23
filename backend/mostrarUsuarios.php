@@ -11,5 +11,3 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     
     echo 'error al mostar los usuarios';
     }
-
-?>
