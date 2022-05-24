@@ -391,7 +391,6 @@ function procesarVenta(producto,unidades,precio_venta){
 
 /**Función mostrarVentas(ventas)*/
 function mostarVentas(ventas){
-    console.log(ventas);
     let fila = '';
     ventas.forEach(producto => {
         let idVenta = producto.idVenta;
@@ -713,6 +712,7 @@ function altaProducto(){
             contentType: false,
             processData: false,
             success: function (response) {
+                console.log(response);
                 $("#nuevoProducto")[0].reset();
                 document.getElementById('productoCrear').style.display="block";
                 document.getElementById('productoCrear').innerHTML=response;
@@ -875,12 +875,12 @@ function bajaProducto(id, nombre){
 /**Fin Función bajaProducto(id) */
 /**Función mostarProductosCompra() */
 function mostrarProductosCompra(){
+    document.getElementById('formularioCompra').style.display="block";
     $.ajax({
         type: "GET",
         url: "backend/productos.php",
        //cuando recibe la respuesta
         success: function (response) {
-            console.log(response);
             document.getElementById('tablaCompra').style.display="block";
             let productos = JSON.parse(response);
             let fila ='';
@@ -902,7 +902,7 @@ function mostrarProductosCompra(){
                         <div class="input-group">
                         <label>CANTIDAD  </label>
                         <input id="cantidad${id}" type="number" name="cantidad"
-                        class="form-control" min="0" value="0" required >
+                        class="form-control" min="0" required >
                         <span class="input-group-btn ">
                             <input  class="btn btn-success btn_compra" type="button " value="Comprar" productoId="${id}" stock="${producto.stock}">
                          </span>

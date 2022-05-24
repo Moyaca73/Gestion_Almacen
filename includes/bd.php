@@ -372,7 +372,7 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
         //existe el producto y está activo
         if($estado == 1){
             $db->rollBack();
-            $error = "El ya existe un producto con el nombre: $nombre";
+            $error = "Ya existe un producto con el nombre: $nombre";
             return $error;
         //existe el producto y no está activo. En este caso lo activamos
         }else{
@@ -384,7 +384,7 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
                 return $error;
             }
          //aumentamos el estock con el nuevo stock
-            $update = "UPDATE productos SET stock =(SELECT stock From productos WHERE nombre = '$nombre') + 100 WHERE nombre = '$nombre'";
+            $update = "UPDATE productos SET stock =(SELECT stock From productos WHERE nombre = '$nombre') + $stock WHERE nombre = '$nombre'";
             $result = $db->query($update);
             if(!$result){
                 $db->rollBack();
@@ -429,7 +429,7 @@ function crearProducto($nombre, $stock, $precioCompra, $precioVenta, $categoria,
     $result = $db->query($insert);
     if(!$result){
         $db->rollBack();
-        $error = "No se ha podido crear el nuevo producto";
+        $error = $insert; //"No se ha podido crear el nuevo producto";
         return $error;
     }
     $db->commit();
