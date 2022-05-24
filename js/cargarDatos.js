@@ -400,6 +400,7 @@ function mostarVentas(ventas){
         fila += `
             <tr>
             <td>${producto.idVenta}</td>
+            <td>${producto.id_vendedor}</td>
             <td>${producto.fecha}</td>
             <td>${producto.hora}</td>
             <td>${producto.nombre}</td>
@@ -579,6 +580,7 @@ function informeVentas(ventas,mensaje){
             <tr>
             <td>${producto.idVenta}</td>
             <td>${producto.fecha}</td>
+            <td>${producto.id_vendedor}</td>
             <td>${producto.nombre}</td>
             <td>${producto.cantidad}</td>
             <td>${producto.precio}</td>

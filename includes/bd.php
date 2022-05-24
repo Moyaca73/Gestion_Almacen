@@ -91,12 +91,13 @@ function cargarProductos(){
     }
 }
 /*función venta($producto,$unidades)*/
-function venta($producto, $unidades){
+function venta($producto, $unidades, $usuario){
+   
     //conexión
    $db=conexion();
     //comienzo de la transacción
     $db->beginTransaction();
-    //comprobar el stock 
+    //comprobar el stock: extraemos los datos de la base de datos
     $select = "SELECT stock, precio_venta, id  FROM productos WHERE id = '$producto'";
 
     $result = $db->query($select);
@@ -127,7 +128,7 @@ function venta($producto, $unidades){
         }
     }
     //generar el registro de la nueva venta
-    $insert = "INSERT INTO ventas (`producto_id`, `cantidad`, `precio`, `fecha`) VALUES ('$idProducto',$unidades,'$precio_venta',now())";
+    $insert = "INSERT INTO ventas (`id_vendedor`,`producto_id`, `cantidad`, `precio`, `fecha`) VALUES ($usuario,'$idProducto',$unidades,'$precio_venta',now())";
 
     $result = $db->query($insert);
 
@@ -148,7 +149,7 @@ function venta($producto, $unidades){
 /**Función mostrarUltimaVenta() */
 function mostrarUltimaVenta(){
     $db=conexion();
-    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
+    $select = "SELECT p.nombre,p.id,p.stock, v.idVenta,v.id_vendedor, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora FROM ventas AS v join productos AS p WHERE v.idVenta = (SELECT MAX(idVenta) FROM ventas) AND p.id = v.producto_id";
 
     $result = $db->query($select);
 
@@ -215,7 +216,7 @@ function ventasTodas(){
     //conexión
 $db=conexion();
 //consulta
-$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora  FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id ORDER BY v.fecha DESC";
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta,v.id_vendedor, v.cantidad, v.precio, DATE_FORMAT(v.fecha, '%d-%m-%Y') as fecha,DATE_FORMAT(v.fecha, '%H:%I:%S') as hora  FROM ventas AS v join productos AS p WHERE  p.id = v.producto_id ORDER BY v.fecha DESC";
 
 $result = $db->query($select);
 
@@ -234,7 +235,7 @@ function  mostrarVentasDia($fecha){
     //conexión
 $db=conexion();
 //consulta
-$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) = '$fecha' AND  p.id = v.producto_id ";
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.id_vendedor, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) = '$fecha' AND  p.id = v.producto_id ";
 
 //para separar la fecha en la consulta
 //https://bahiaxip.com/entrada/fechas-en-mysql
@@ -255,7 +256,7 @@ function  mostrarVentasPeriodo($desde,$hasta){
     //conexión
 $db=conexion();
 //consulta
-$select = "SELECT p.nombre, p.id, p.stock, v.idVenta, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) >= '$desde' AND DATE(v.fecha) <= '$hasta' AND  p.id = v.producto_id ";
+$select = "SELECT p.nombre, p.id, p.stock, v.idVenta,v.id_vendedor, v.cantidad, v.precio, v.fecha FROM ventas AS v join productos AS p WHERE DATE(v.fecha) >= '$desde' AND DATE(v.fecha) <= '$hasta' AND  p.id = v.producto_id ";
 
 //para separar la fecha en la consulta
 //https://bahiaxip.com/entrada/fechas-en-mysql
