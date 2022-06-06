@@ -130,13 +130,12 @@
                 <form method="post" onsubmit="return login()" class="clearfix">
                   <div class="form-group">
                     <label for="usuario" class="control-label">Usuario</label>
-                    <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario"
-                      value="Admin">
+                    <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Usuario">
                   </div>
                   <div class="form-group">
                     <label for="clave" class="control-label">Contraseña</label>
                     <input type="password" name="clave" class="form-control" id="clave" placeholder="Contraseña"
-                      value="admin" required>
+                      required>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn btn-info  pull-right">Acceso</button>
@@ -178,10 +177,10 @@
 
             </form>
 
-            <div id="lista_productos" class="table-responsive table-bordered">
+            <div id="lista_productos">
               <div class="row">
                 <div class="col">
-                  <table class="table table-dark">
+                  <table class="table table-dark table-responsive-sm">
                     <tr>
                       <th>ID</th>
                       <th>NOMBRE</th>
@@ -204,7 +203,7 @@
           <div id="ventas" class="row" style="display: none;">
             <h1 id="ventaEstado"></h1>
             <div class="col">
-              <table class="table table-dark">
+              <table class="table table-dark table-responsive-sm">
                 <tr>
                   <th>ID</th>
                   <th>VENDEDOR</th>
@@ -254,30 +253,34 @@
             <!--Fin Formulario Periodo-->
             <H1 id="cabeceraInforme"></H1>
             <div class="row">
+             <div class="col-3">
+               
+             </div>
               <div class="col">
-
+                <div class="table-responsive">
+                  <table id="tablaInformeVentas" class="table table-danger table-hover ">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>FECHA</th>
+                        <th>VENDEDOR</th>
+                        <th>NOMBRE</th>
+                        <th>CANTIDAD</th>
+                        <th>PRECIO</th>
+                        <th>TOTAL</th>
+                      </tr>
+                    </thead>
+                    <tbody id="informeVentasBody">
+                    </tbody>
+                    <tr>
+                      <th style="text-align: end;" colspan="6">Total ventas</th>
+                      <td id="totalVentas"></td>
+                    </tr>
+                  </table>
+                </div>
               </div>
-              <div class="col">
-                <table id="tablaInformeVentas" class="table  table-bordered table-hover table-active text-center">
-                  <tr>
-                    <th>ID</th>
-                    <th>FECHA</th>
-                    <th>VENDEDOR</th>
-                    <th>NOMBRE</th>
-                    <th>CANTIDAD</th>
-                    <th>PRECIO</th>
-                    <th>TOTAL</th>
-                  </tr>
-                  <tbody id="informeVentasBody">
-                  </tbody>
-                  <tr>
-                    <th style="text-align: end;" colspan="5">Total ventas</th>
-                    <td id="totalVentas"></td>
-                  </tr>
-                </table>
-              </div>
-              <div class="col">
-
+              <div class="col-3">
+                
               </div>
             </div>
           </div>
@@ -512,7 +515,7 @@
   </div>
   <!--Fin Contenido-->
   <!--Pié de página-->
-  <footer class="text-center text-lg-start bg-light text-muted">
+  <footer class="text-center fload-bottom text-lg-start bg-light text-muted">
     <div class="text-center p-5 bg-light">
       © 2022 Copyright: Antonio Moya Calvo
     </div>

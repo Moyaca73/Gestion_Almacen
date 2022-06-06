@@ -12,6 +12,8 @@ $(document).on('click', '#nuevaVenta', function(e){
 $(document).on('click', '#eliminarVenta', function(e){
     limpiarPagina();
     document.getElementById('ventas').style.display="block";
+    document.getElementById('ventaEstado').style.display="block";
+    document.getElementById('ventaEstado').innerHTML="Listado de ventas";
     todasLasVentas();
     
 })
@@ -62,7 +64,9 @@ $(document).on('click', '#altaNuevoUsuario', function(e){
 $(document).on('click', '#bajaUsuario', function(e){
     limpiarPagina();
     document.getElementById('listaUsuarios').style.display="block";
+    document.getElementById('bajaEstado').innerHTML="Lista de usuarios";
     mostrarUsuarios();
+    
 });
 /***************Fin Gestión de Usuarios******************* */
 /***************Gestión de Productos********************* */
@@ -70,6 +74,7 @@ $(document).on('click', '#bajaUsuario', function(e){
 $(document).on('click', '#altaProducto', function(e){
     limpiarPagina();
     document.getElementById('formularioAltaNuevoProducto').style.display="block";
+    document.getElementById('productoCrear').innerHTML='Introduzca los datos del nuevo producto';
     altaProducto();
    });
 //Baja producto
@@ -119,6 +124,7 @@ function limpiarPagina(){
     document.getElementById('tablaCompra').style.display="none";
     document.getElementById('tablaComprasRealizadas').style.display="none";
     document.getElementById('bajaProductoEstado').style.display="none";
+    
     
 }
 /**Fin Función limpiarPagina() */
@@ -190,7 +196,7 @@ function cargarUsuario(){
             let usuario = JSON.parse(this.responseText);
             //fecha y hora del acceso
             let nombre = usuario[0]['nombre'];
-            document.getElementById("fecha").innerHTML =`${nombre}Acceso: ${fecha()}  ${hora()}`;
+            document.getElementById("fecha").innerHTML =`Usuario: ${nombre}.<br>Acceso: ${fecha()}  ${hora()}`;
             
             if(usuario[0]['rol'] == 3){
                 //mostrar nav usuario
@@ -255,7 +261,9 @@ function mostrarProductosVenta(){
                 let cantidad = parseInt($('#cantidad'+id).val());
                 let precio_venta = $('#precio_venta'+id).val();
                 let stock = parseInt($('#stock'+id).val());
-                if(stock < cantidad){
+                if(isNaN(cantidad)){
+                    alert('introducir un número de unidades válido');
+                }else if(stock < cantidad){
                     alert(`Solo dispones del ${stock} unidades`);
                     
                 }else if(cantidad == 0){
@@ -301,7 +309,7 @@ function mostrarProductosVenta(){
             url: "backend/buscarProductos.php",
             data: { busqueda },
             success: function (response) {
-                
+                console.log(response);
                 let productos = JSON.parse(response);
             let fila ='';
             productos.forEach(producto => {
@@ -334,25 +342,7 @@ function mostrarProductosVenta(){
                  $('#formularioVenta').trigger('reset');
                
             });
-            $(document).on('click','.btn_venta', function(e){
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                let id = $(this).attr('productoId');
-                let cantidad = parseInt($('#cantidad'+id).val());
-                let precio_venta = $('#precio_venta'+id).val();
-                let stock = parseInt($('#stock'+id).val());
-               
-                if(stock < cantidad){
-                    alert(`Solo dispones del ${stock} unidades`);
-                    
-                }else if(cantidad == 0){
-                    alert('Debes introducir una cantidad mayor que cero');
-                }else{
-                     procesarVenta(id,cantidad,precio_venta);
-                    }
-                
-                
-            })
+            
                 
             }
         });
@@ -369,6 +359,7 @@ function procesarVenta(producto,unidades,precio_venta){
         url: "backend/venta.php",
         data: {producto,unidades,precio_venta},
         success: function (response) {
+            console.log(response);
             document.getElementById('productosVenta').style.display="none";
             document.getElementById('ventas').style.display="block";
             document.getElementById('ventaEstado').style.display="block";
@@ -378,7 +369,7 @@ function procesarVenta(producto,unidades,precio_venta){
             mostarVentas(venta);
             document.getElementById('ventaEstado').innerHTML='La venta ha sido realizada correctamente';
 
-            }else{ document.getElementById('ventaEstado').innerHTML='Error en la venta';}
+            }else{ document.getElementById('ventaEstado').innerHTML = response ;}
            
             
         }
@@ -530,6 +521,7 @@ function informeVentasPeriodo(){
     document.getElementById('cabeceraInforme').innerHTML = mensaje;
     $('#hasta').val(fechaBusquedas());//ponemos la fecha actual por defecto
    $('#informeVentas').submit(function (e) { 
+           e.preventDefault();
            let desde = $('#desde').val();
            let hasta = $('#hasta').val();
            if(desde > hasta){
@@ -601,6 +593,7 @@ function informeVentas(ventas,mensaje){
 function altaNuevoUsuario(){
     document.getElementById('usuarioCrear').innerHTML="Introduce los datos del nuevo usuario";
     $('#nuevoUsuario').submit(function (e){
+        e.preventDefault();
         let nombre = $('#nombre').val();
         let nombreUsuario = $('#nombreUsuario').val();
         let clave = $('#claveNuevoUsuario').val();
@@ -693,7 +686,7 @@ function bajaUsuario(id,nombreUsuario){
 
 /**Función altaProducto() */
 function altaProducto(){
-    document.getElementById('productoCrear').style.display="none";
+    
     $('#nuevoProducto').submit(function (e){
         e.preventDefault();
         let nombre = $('#nombreProducto').val();
@@ -902,7 +895,7 @@ function mostrarProductosCompra(){
                         <div class="input-group">
                         <label>CANTIDAD  </label>
                         <input id="cantidad${id}" type="number" name="cantidad"
-                        class="form-control" min="0" required >
+                        class="form-control" min="0" value="0" step="1" required >
                         <span class="input-group-btn ">
                             <input  class="btn btn-success btn_compra" type="button " value="Comprar" productoId="${id}" stock="${producto.stock}">
                          </span>
@@ -921,9 +914,10 @@ function mostrarProductosCompra(){
                 let cantidad = parseInt($('#cantidad'+id).val());
                 let precioVenta = $('#precioVenta'+id).val();
                 let precioCompra = $('#precioCompra'+id).val();
-                let stock = cantidad + parseInt($(this).attr('stock')); 
-               
-                if(precioCompra <= 0){
+                let stock = cantidad + parseInt($(this).attr('stock'));
+                if(isNaN(cantidad)) {
+                    alert('introducir un número de unidades válido');
+                }else if(precioCompra <= 0){
                     alert('comprobar el precio de compra');
                 }else if(precioVenta <= 0){
                     alert('Revisar el precio de venta');
@@ -1022,7 +1016,7 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
         url: "backend/compra.php",
         data: {producto,unidades,precioCompra,precioVenta,stock},
         success: function (response) {
-           
+           console.log(response);
             document.getElementById('compraProductos').style.display="block";
             document.getElementById('compraProductoEstado').style.display="block";
             if(validarJson(response)){
@@ -1033,7 +1027,9 @@ function  procesarCompra(producto,unidades,precioCompra,precioVenta,stock){
             document.getElementById('tablaComprasRealizadas').style.display="block";
             document.getElementById('compraProductoEstado').innerHTML='La compra ha sido realizada correctamente';
 
-            }else{ document.getElementById('CompraProductoEstado').innerHTML=response;}
+            }else{ 
+                document.getElementById('CompraProductoEstado').innerHTML=response;
+            }
            
             
         }

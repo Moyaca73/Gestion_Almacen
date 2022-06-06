@@ -1,8 +1,10 @@
 
 body{
+    background-image: url(../imagenLogo/repuestosCoche4.png);
     background-color: rgba(123, 200, 251, 0.879);
 }
 #contenido{
+   
     height:max-content;
 }
 #logo{

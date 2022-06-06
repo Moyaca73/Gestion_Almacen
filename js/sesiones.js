@@ -13,6 +13,7 @@ function login(formu){
             }else{
                 //el usuario existe
                 //borramos el formulario
+                $('#loguin').trigger('reset');
                 document.getElementById("login").style.display="none";
                 //mostramos la sección del usuario que corresponda
                cargarUsuario();

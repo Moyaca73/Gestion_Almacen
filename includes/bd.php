@@ -27,6 +27,11 @@ function leer_config($ficheroXML,$eschema){
 function conexion(){
     $res=leer_config(dirname(__FILE__)."\configuracion.xml",dirname(__FILE__)."\configuracion.xsd");
     $db=new PDO($res[0],$res[1],$res[2]);
+    //$host = 'localhost';
+    //$dbname = 'id18991333_almacen';
+    //$username = 'id18991333_antonio';
+    //$password = 'v&-Ws5GNgkKKpTiP';
+    //$db = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     return $db;
 }
 
@@ -110,21 +115,16 @@ function venta($producto, $unidades, $usuario){
         }
         if($stock >= $unidades){
             $nuevoStock  = $stock - $unidades;
-    //Si hay suficiente stock, modificamos el stock
-    $query = "UPDATE productos SET stock = $nuevoStock Where id = '$producto'";
+            //Si hay suficiente stock, modificamos el stock
+            $query = "UPDATE productos SET stock = $nuevoStock Where id = '$producto'";
 
-    $result= $db->query($query);
-    if(!$result){
-        //si no funciona, anulamos la transacción 
-    $db->rollBack();
-        return false;
-    
-    }
+            $result= $db->query($query);
+            if(!$result){
+                //si no funciona, anulamos la transacción 
+                $db->rollBack();
+                return false;
+            }
 
-        }else{
-            //si no funciona, anulamos la transacción 
-            $db->rollBack();
-            return false;
         }
     }
     //generar el registro de la nueva venta
@@ -284,16 +284,16 @@ function crearUsuario($nombre,$nombreUsuario,$clave,$rol,$status){
     if($result->rowCount() == 1){
         //existe el usuario
         $db->rollBack();
-        $error = "El usuario <b>$nombreUsuario</b> ya existe";
-        return $error;
+        $error1 = "El usuario <b>$nombreUsuario</b> ya existe";
+        return $error1;
     }else{
         //creación del nuevo usuario
         $insert ="INSERT INTO `usuarios`(`nombre`, `nombre_usuario`, `clave`, `rol`, `status`) VALUES ('$nombre', '$nombreUsuario', '$clave', $rol, $status) ";
         $result = $db->query($insert);
         if(!$result){
             $db->rollBack();
-            $error = "Error en la creación del usuario $nombreUsuario";
-            return $error;
+            $error2 = "Error en la creación del usuario $nombreUsuario";
+            return $error2;
         }else{
             $db->commit();
             $creado = "El usuario $nombreUsuario ha sido creado correctamente";
@@ -522,7 +522,7 @@ if($result->rowCount() > 0){
 /**Función busquedaProductos($busqueda) */
 function busquedaProductos($busqueda){
     $db=conexion();
-    $select = "SELECT * FROM productos WHERE nombre LIKE '$busqueda%' and estado = 1";
+    $select = "SELECT p.id, p.estado, p.nombre, p.precio_compra, p.precio_venta, p.stock, p.imagen, c.nombre_categoria FROM productos AS p join categorias AS c WHERE p.nombre LIKE '$busqueda%' and p.estado = 1 and p.categoria_id = c.id";
     $result = $db->query($select);
     if(!$result){
         die('Query Error');
